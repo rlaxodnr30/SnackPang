@@ -6,7 +6,6 @@ export const SignUpBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid red;
 `;
 export const SignInput = styled.div`
   display: flex;
