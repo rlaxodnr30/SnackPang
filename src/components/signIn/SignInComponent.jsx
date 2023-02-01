@@ -11,6 +11,7 @@ import {
   ButtonSocial,
   SocialBtnBox,
   SocialIcon,
+  LogoImg,
 } from "./SignInComponent";
 import googles from "../../images/googleicon.png";
 import github from "../../images/githubicon.png";
@@ -23,7 +24,7 @@ export default function SignInComponent() {
     <>
       <SignUpBox>
         <SignInput>
-          <SnackPangImg src={snckPang} />
+          <LogoImg src={snckPang} />
 
           <div>
             <InputTitle>이메일주소</InputTitle>
@@ -65,9 +66,3 @@ export default function SignInComponent() {
     </>
   );
 }
-
-export const SnackPangImg = styled.img`
-  border-radius: 10px;
-  width: 300px;
-  height: 150px;
-`;

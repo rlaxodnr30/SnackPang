@@ -82,3 +82,8 @@ export const SocialIcon = styled.img`
   height: 18px;
   margin-right: 10px;
 `;
+export const LogoImg = styled.img`
+  border-radius: 10px;
+  width: 300px;
+  height: 150px;
+`;

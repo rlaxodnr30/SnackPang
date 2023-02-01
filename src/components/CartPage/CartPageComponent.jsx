@@ -7,11 +7,12 @@ import {
   Table,
   Thead,
   Tbody,
+  CartBox,
 } from "./CartPageComponent";
 export default function CartPageComponent() {
   return (
     <>
-      <div>
+      <CartBox>
         <ShoppingImgBox>
           <img src={ShoppingText} />
           <hr />
@@ -40,7 +41,7 @@ export default function CartPageComponent() {
             </Tbody>
           </Table>
         </CartList>
-      </div>
+      </CartBox>
     </>
   );
 }
