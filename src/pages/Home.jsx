@@ -1,12 +1,8 @@
-import React from "react";
-import styled from "styled-components";
-
+import React from 'react';
+import styled from 'styled-components';
+import HomePage from '../components/Detail/HomePage.jsx';
 export default function Home() {
-  return (
-    <>
-      <ProductImgBox></ProductImgBox>
-    </>
-  );
+  return <HomePage></HomePage>;
 }
 
 export const ProductImgBox = styled.div`
