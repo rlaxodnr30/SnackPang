@@ -12,7 +12,7 @@ import {
   SocialBtnBox,
   SocialIcon,
 } from "./SignUpComponent";
-import google from "../../images/googleicon.png";
+import googles from "../../images/googleicon.png";
 import github from "../../images/githubicon.png";
 import { auth } from "../../firebase.js";
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -98,7 +98,7 @@ export default function SignUpComponent() {
           </SocialBtnBox>
           <SocialBtnBox>
             <ButtonSocial type="button">
-              <SocialIcon src={google} />
+              <SocialIcon src={googles} />
               구글 로그인
             </ButtonSocial>
           </SocialBtnBox>
