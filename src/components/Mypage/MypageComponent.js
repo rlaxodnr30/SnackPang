@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 export const ProfileBox = styled.div`
-  border: 1px solid black;
   width: 100%;
   height: 100vh;
   display: flex;
@@ -20,7 +19,6 @@ export const ProfileBoxDetail = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  border: 1px solid black;
   width: 40%;
   height: 600px;
   border-radius: 10px;
