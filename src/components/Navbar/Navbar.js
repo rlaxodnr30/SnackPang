@@ -6,7 +6,7 @@ export const NavbarBox = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 20px;
-  background-color: gray;
+  background-color: #dfdfdf;
   color: white;
 `;
 export const LeftNav = styled.div`
@@ -15,7 +15,7 @@ export const LeftNav = styled.div`
 `;
 export const HomeLogo = styled.img`
   width: 100px;
-  height: 80px;
+  height: 50px;
 `;
 export const LeftNavLink = styled(NavLink)`
   display: flex;
@@ -37,14 +37,14 @@ export const CartImg = styled.img`
 `;
 export const LogBtn = styled.button`
   border: none;
-  background-color: gray;
+  background-color: #dfdfdf;
   margin-right: 10px;
   font-weight: bold;
   cursor: pointer;
 `;
 export const Porduc = styled.span`
   border: none;
-  background-color: gray;
+  background-color: #dfdfdf;
   margin-right: 10px;
   font-weight: 500;
   color: black;

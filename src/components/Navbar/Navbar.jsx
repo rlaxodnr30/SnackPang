@@ -10,7 +10,7 @@ import {
   Porduc,
   RightNavLink,
 } from "./Navbar";
-import homeLogo from "../../images/12.png";
+import homeLogo from "../../images/image 2.png";
 import cart from "../../images/shopping.png";
 
 export default function Navbar() {
@@ -20,7 +20,7 @@ export default function Navbar() {
         <LeftNav>
           <LeftNavLink to="/">
             <HomeLogo src={homeLogo} />
-            <Porduc>SnakPang</Porduc>
+            {/* <Porduc>SnakPang</Porduc> */}
           </LeftNavLink>
         </LeftNav>
 
