@@ -15,7 +15,6 @@ export const SignInput = styled.div`
   width: 60%;
   height: 500px;
   margin-top: 150px;
-  border: 1px solid #bd5e00;
   border-radius: 20px;
   margin-bottom: 150px;
 `;
@@ -50,6 +49,12 @@ export const ButtonSign = styled.button`
   width: 300px;
   text-align: center;
   font-weight: bold;
+  transition: 0.5s;
+  &:hover {
+    background: #de4c2a;
+    color: white;
+    transition: 0.5s;
+  }
   cursor: pointer;
 `;
 
