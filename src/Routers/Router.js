@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import AdminComponent from '../components/Admin/AdminComponent.jsx';
 import Navbar from '../components/Navbar/Navbar.jsx';
 import CartPage from '../pages/CartPage.jsx';
 import DetailPage from '../pages/DetailPage.jsx';
@@ -21,6 +22,7 @@ export default function Router() {
         <Route path='/product' element={<Product />} />
         <Route path='/cartpage' element={<CartPage />} />
         <Route path='/detail' element={<DetailPage />} />
+        <Route path='/Admin' element={<AdminComponent />} />
       </Routes>
     </BrowserRouter>
   );
