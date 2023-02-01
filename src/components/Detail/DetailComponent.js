@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import testSnack from '../../images/testSnack.png';
 export const MainWrap = styled.div`
   display: flex;
   align-items: center;
