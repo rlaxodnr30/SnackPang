@@ -51,12 +51,12 @@ export default function SignUpComponent() {
 
     alert("제대로 된 이메일입니다!");
 
-    // const user = await createUserWithEmailAndPassword(
-    //   auth,
-    //   idRef.current.value,
-    //   pwRef.current.value
-    // );
-    // console.log(user);
+    const user = await createUserWithEmailAndPassword(
+      auth,
+      idRef.current.value,
+      pwRef.current.value
+    );
+    console.log(user);
   };
 
   return (
