@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import styled from "styled-components";
+import React, { useRef, useState } from 'react';
+import styled from 'styled-components';
 import {
   InputTitle,
   SignInput,
@@ -11,11 +11,11 @@ import {
   ButtonSocial,
   SocialBtnBox,
   SocialIcon,
-} from "./SignUpComponent";
-import googles from "../../images/googleicon.png";
-import github from "../../images/githubicon.png";
-import { auth } from "../../firebase.js";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+} from './SignUpComponent';
+import googles from '../../images/googleicon.png';
+import github from '../../images/githubicon.png';
+import { auth } from '../../firebase.js';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 export default function SignUpComponent() {
   //useRef input값 받아오기
@@ -27,10 +27,10 @@ export default function SignUpComponent() {
     console.log(idRef.current.value, pwRef.current.value);
     /* 이메일 정규표현식 */
     const emailReg = new RegExp(
-      "^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$"
+      '^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$'
     );
 
-    const passwordReg = new RegExp("");
+    const passwordReg = new RegExp('');
 
     /* 특수문자, 영어 조합의 비밀번호 */
     /* 주민번호, 핸드폰번호 */
@@ -40,23 +40,23 @@ export default function SignUpComponent() {
     const inputPassword = pwRef.current.value;
 
     if (emailReg.test(inputEmail) === false) {
-      alert("제대로 된 이메일 입력하세요");
+      alert('제대로 된 이메일 입력하세요');
       return;
     }
 
     if (!passwordReg.test(inputPassword)) {
-      alert("제대로 된 이메일 입력하세요");
+      alert('제대로 된 이메일 입력하세요');
       return;
     }
 
-    alert("제대로 된 이메일입니다!");
+    alert('제대로 된 이메일입니다!');
 
-    // const user = await createUserWithEmailAndPassword(
-    //   auth,
-    //   idRef.current.value,
-    //   pwRef.current.value
-    // );
-    // console.log(user);
+    const user = await createUserWithEmailAndPassword(
+      auth,
+      idRef.current.value,
+      pwRef.current.value
+    );
+    console.log(user);
   };
 
   return (
@@ -70,8 +70,8 @@ export default function SignUpComponent() {
             <InputempwBox>
               <Inputempw
                 ref={idRef}
-                placeholder="snackpang@snackpang.com"
-                type="text"
+                placeholder='snackpang@snackpang.com'
+                type='text'
               />
             </InputempwBox>
           </div>
@@ -80,24 +80,24 @@ export default function SignUpComponent() {
             <InputempwBox>
               <Inputempw
                 ref={pwRef}
-                type="password"
-                placeholder="비밀번호를 입력해주세요."
+                type='password'
+                placeholder='비밀번호를 입력해주세요.'
               />
             </InputempwBox>
           </div>
           <ButtonBox>
-            <ButtonSign onClick={signUpBtn} type="submit">
+            <ButtonSign onClick={signUpBtn} type='submit'>
               회원가입
             </ButtonSign>
           </ButtonBox>
           <SocialBtnBox>
-            <ButtonSocial type="button">
+            <ButtonSocial type='button'>
               <SocialIcon src={github} />
               깃헙 로그인
             </ButtonSocial>
           </SocialBtnBox>
           <SocialBtnBox>
-            <ButtonSocial type="button">
+            <ButtonSocial type='button'>
               <SocialIcon src={googles} />
               구글 로그인
             </ButtonSocial>
