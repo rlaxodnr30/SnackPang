@@ -1,5 +1,5 @@
-import React, { useRef } from "react";
-import styled from "styled-components";
+import React, { useRef } from 'react';
+import styled from 'styled-components';
 import {
   InputTitle,
   SignInput,
@@ -12,14 +12,30 @@ import {
   SocialBtnBox,
   SocialIcon,
   LogoImg,
-} from "./SignInComponent";
-import googles from "../../images/googleicon.png";
-import github from "../../images/githubicon.png";
-import snckPang from "../../images/image 1.png";
+} from './SignInComponent';
+import { useNavigate } from 'react-router-dom';
+import { auth } from '../../firebase.js';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import googles from '../../images/googleicon.png';
+import github from '../../images/githubicon.png';
+import snckPang from '../../images/image 1.png';
 
 export default function SignInComponent() {
-  const idRef = React.useRef();
-  const pwRef = React.useRef();
+  const navigate = useNavigate();
+  const idRef = useRef(null);
+  const pwRef = useRef(null);
+
+  const singIN = async () => {
+    const login = await signInWithEmailAndPassword(
+      auth,
+      idRef.current.value,
+      pwRef.current.value
+    );
+    alert('로그인 성공');
+    console.log(login);
+    navigate('/');
+  };
+
   return (
     <>
       <SignUpBox>
@@ -31,8 +47,8 @@ export default function SignInComponent() {
             <InputempwBox>
               <Inputempw
                 ref={idRef}
-                placeholder="snackpang@snackpang.com"
-                type="text"
+                placeholder='snackpang@snackpang.com'
+                type='text'
               />
             </InputempwBox>
           </div>
@@ -41,22 +57,24 @@ export default function SignInComponent() {
             <InputempwBox>
               <Inputempw
                 ref={pwRef}
-                type="password"
-                placeholder="비밀번호를 입력해주세요."
+                type='password'
+                placeholder='비밀번호를 입력해주세요.'
               />
             </InputempwBox>
           </div>
           <ButtonBox>
-            <ButtonSign type="submit">로그인</ButtonSign>
+            <ButtonSign onClick={singIN} type='submit'>
+              로그인
+            </ButtonSign>
           </ButtonBox>
           <SocialBtnBox>
-            <ButtonSocial type="button">
+            <ButtonSocial type='button'>
               <SocialIcon src={github} />
               깃헙 로그인
             </ButtonSocial>
           </SocialBtnBox>
           <SocialBtnBox>
-            <ButtonSocial type="button">
+            <ButtonSocial type='button'>
               <SocialIcon src={googles} />
               구글 로그인
             </ButtonSocial>
