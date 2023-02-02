@@ -8,6 +8,7 @@ export default function Footer() {
       <FooterBox>
         <FooterBoxDetail>
           <Snackpang src={snack} />
+          <hr />
           <span>
             SnackPang(주)대표 : 조재원사업자등록번호 : 111-22-32345
             통신판매업신고 : 제2022-진건퇴계원-0142호개인정보 보호책임자 :
