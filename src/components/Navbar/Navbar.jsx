@@ -1,6 +1,4 @@
-
 import React, { useEffect, useState } from "react";
-
 import {
   HomeLogo,
   LeftNav,
@@ -11,14 +9,13 @@ import {
   LogBtn,
   Porduc,
   RightNavLink,
-
 } from "./Navbar";
 import homeLogo from "../../images/image 2.png";
 import cart from "../../images/shopping.png";
-import { auth } from "../../firebase";
+import { auth, db } from "../../firebase";
 import { signOut } from "firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
-import { async } from "@firebase/util";
+import { getDocs, collection } from "firebase/firestore";
 
 export default function Navbar() {
   const [isLogin, setIsLogin] = useState(false);
@@ -36,27 +33,27 @@ export default function Navbar() {
           setIsLogin(false);
         }
         setUsers(user);
+        console.log(user);
+        console.log(users);
       },
       []
     );
   });
-
-
   return (
     <>
       <NavbarBox>
         <LeftNav>
-          <LeftNavLink to='/'>
+          <LeftNavLink to="/">
             <HomeLogo src={homeLogo} />
             {/* <Porduc>SnakPang</Porduc> */}
           </LeftNavLink>
         </LeftNav>
 
         <RightNav>
-          <RightNavLink to='/cartpage'>
+          <RightNavLink to="/cartpage">
             <CartImg src={cart} />
           </RightNavLink>
-          <RightNavLink to='/mypage'>
+          <RightNavLink to="/mypage">
             <Porduc>마이페이지</Porduc>
           </RightNavLink>
 
@@ -67,7 +64,6 @@ export default function Navbar() {
             <LogBtn onClick={logoutBtn}>
               {isLogin ? "로그아웃" : "로그인"}
             </LogBtn>
-
           </RightNavLink>
         </RightNav>
       </NavbarBox>

@@ -14,12 +14,14 @@ import {
 } from "./SignUpComponent";
 import googles from "../../images/googleicon.png";
 import github from "../../images/githubicon.png";
-import { auth } from "../../firebase.js";
+import { auth, db } from "../../firebase.js";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { addDoc, collection } from "firebase/firestore";
 
 export default function SignUpComponent() {
   //useRef input값 받아오기
@@ -71,15 +73,20 @@ export default function SignUpComponent() {
     const user = await createUserWithEmailAndPassword(
       auth,
       idRef.current.value,
-      pwRef.current.value,
-      (auth.displayName = nameRef.current.value)
-    );
-    // console.log(user);
+      pwRef.current.value
+      // (auth.displayName = nameRef.current.value)
+    ).then(() => {
+      if (auth.currentUser)
+        updateProfile(auth?.currentUser, {
+          displayName: inputname,
+        });
+      // console.log(auth);
+    });
     const userLogin = await signInWithEmailAndPassword(
       auth,
       idRef.current.value,
-      pwRef.current.value,
-      nameRef.current.value
+      pwRef.current.value
+      // nameRef.current.value
     );
     // console.log(userLogin);
     navigate("/");
