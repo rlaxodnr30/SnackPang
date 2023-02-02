@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { MainWrap, Carousel, CarouselInner } from './HomePage';
-import Swing from '../../images/swingChip.jpg';
-import Sun from '../../images/sunchip.png';
-import Dodo from '../../images/Nacho.jpg';
-import Banner from '../../images/Banner.png';
-import styled from 'styled-components';
-import { db } from '../../firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import React, { useEffect, useState } from "react";
+import { MainWrap, Carousel, CarouselInner } from "./HomePage";
+import Swing from "../../images/swingChip.jpg";
+import Sun from "../../images/sunchip.png";
+import Dodo from "../../images/Nacho.jpg";
+import Banner from "../../images/Banner.png";
+import styled from "styled-components";
+import { db } from "../../firebase";
+import { collection, getDocs } from "firebase/firestore";
 
 export default function Home() {
   const [snacks, setSnacks] = useState([]);
-  const snckcollectionRef = collection(db, 'product');
+  const snckcollectionRef = collection(db, "product");
 
   useEffect(() => {
     const getData = async () => {
       const data = await getDocs(snckcollectionRef);
-      console.log(data);
+
       const snackData = [];
 
       data.forEach((doc) => {
@@ -48,7 +48,9 @@ export default function Home() {
         <div>
           {snacks.map((r) => {
             return (
-              <div key={r.id}>
+
+              <div key={r.id} id={r.id}>
+
                 <p>{r.name}</p>
                 <p>{r.price}</p>
                 <img src={r.image} />
