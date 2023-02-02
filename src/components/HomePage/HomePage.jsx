@@ -20,7 +20,7 @@ export default function Home() {
 
       data.forEach((doc) => {
         snackData.push({
-          id: doc.id,
+          id: doc.data().id,
           name: doc.data().name,
           price: doc.data().price,
           image: doc.data().image,
@@ -38,7 +38,6 @@ export default function Home() {
       // );
     };
     getData();
-    console.log(snacks);
   }, []);
   return (
     <div>
@@ -49,7 +48,7 @@ export default function Home() {
         <div>
           {snacks.map((r) => {
             return (
-              <div id={r.id}>
+              <div key={r.id}>
                 <p>{r.name}</p>
                 <p>{r.price}</p>
                 <img src={r.image} />
