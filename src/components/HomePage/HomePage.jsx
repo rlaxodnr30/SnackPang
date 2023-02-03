@@ -59,13 +59,6 @@ export default function Home() {
               />
               <SnackName>상품명:{r.name}</SnackName>
               <SnackPrice>판매가:{r.price}</SnackPrice>
-              <button
-                onClick={() => {
-                  alert('담김요');
-                }}
-              >
-                장바구니 +
-              </button>
             </SnackCard>
           );
         })}
