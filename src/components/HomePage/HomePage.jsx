@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MainWrap, Carousel, CarouselInner } from './HomePage';
 import Swing from '../../images/swingChip.jpg';
 import Sun from '../../images/sunchip.png';
@@ -11,7 +12,7 @@ import { collection, getDocs } from 'firebase/firestore';
 export default function Home() {
   const [snacks, setSnacks] = useState([]);
   const snckcollectionRef = collection(db, 'product');
-
+  const navigate = useNavigate();
   useEffect(() => {
     const getData = async () => {
       const data = await getDocs(snckcollectionRef);
@@ -50,9 +51,21 @@ export default function Home() {
         {snacks.map((r) => {
           return (
             <SnackCard key={r.id} id={r.id}>
-              <ProducImg src={r.image} />
-              <span>{r.name}</span>
-              <span>{r.price}</span>
+              <ProducImg
+                onClick={() => {
+                  navigate('/detail');
+                }}
+                src={r.image}
+              />
+              <SnackName>상품명:{r.name}</SnackName>
+              <SnackPrice>판매가:{r.price}</SnackPrice>
+              <button
+                onClick={() => {
+                  alert('담김요');
+                }}
+              >
+                장바구니 +
+              </button>
             </SnackCard>
           );
         })}
@@ -67,16 +80,29 @@ export const SnacksImg = styled.img`
 export const ProducImg = styled.img`
   width: 100px;
   height: 100px;
+  cursor: pointer;
 `;
 export const ProducImgBox = styled.div`
   display: flex;
   flex-wrap: wrap;
-  border: 1px solid red;
   justify-content: space-around;
 `;
 export const SnackCard = styled.div`
-  border: 1px solid black;
-  padding: 50px;
+  border: 1px solid #df4c2c;
+  padding: 20px;
   margin-bottom: 20px;
+  width: 23%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 10px;
 `;
-export const SnackName = styled.span``;
+export const SnackName = styled.span`
+  font-weight: 800;
+  margin-top: 10px;
+`;
+export const SnackPrice = styled.span`
+  color: #ffa125;
+  font-weight: 500;
+  margin-top: 10px;
+`;
