@@ -15,27 +15,28 @@ export default function Home() {
   useEffect(() => {
     const getData = async () => {
       const data = await getDocs(snckcollectionRef);
+      // console.log("data: ", data);
+      // const snackData = [];
+      // console.log(data);
 
-      const snackData = [];
-
-      data.forEach((doc) => {
-        snackData.push({
-          id: doc.data().id,
-          name: doc.data().name,
-          price: doc.data().price,
-          image: doc.data().image,
-        });
-      });
-      setSnacks(snackData);
-      // console.log(data.data());
-      // setSnacks(
-      //   data.docs.map((doc) => ({
-      //     id: doc.id,
+      // data.forEach((doc) => {
+      //   snackData.push({
+      //     id: doc.data().id,
       //     name: doc.data().name,
       //     price: doc.data().price,
       //     image: doc.data().image,
-      //   }))
-      // );
+      //   });
+      // });
+      // setSnacks(snackData);
+      // console.log(data.data());
+      setSnacks(
+        data.docs.map((doc) => ({
+          id: doc.id,
+          name: doc.data().name,
+          price: doc.data().price,
+          image: doc.data().image,
+        }))
+      );
     };
     getData();
   }, []);
@@ -44,21 +45,18 @@ export default function Home() {
       <div>
         <div>배너</div>
       </div>
-      <div>
-        <div>
-          {snacks.map((r) => {
-            return (
 
-              <div key={r.id} id={r.id}>
-
-                <p>{r.name}</p>
-                <p>{r.price}</p>
-                <img src={r.image} />
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      <ProducImgBox>
+        {snacks.map((r) => {
+          return (
+            <SnackCard key={r.id} id={r.id}>
+              <ProducImg src={r.image} />
+              <span>{r.name}</span>
+              <span>{r.price}</span>
+            </SnackCard>
+          );
+        })}
+      </ProducImgBox>
     </div>
   );
 }
@@ -66,3 +64,19 @@ export const SnacksImg = styled.img`
   width: 300px;
   height: 300px;
 `;
+export const ProducImg = styled.img`
+  width: 100px;
+  height: 100px;
+`;
+export const ProducImgBox = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid red;
+  justify-content: space-around;
+`;
+export const SnackCard = styled.div`
+  border: 1px solid black;
+  padding: 50px;
+  margin-bottom: 20px;
+`;
+export const SnackName = styled.span``;

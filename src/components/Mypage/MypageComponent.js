@@ -11,7 +11,10 @@ export const ProfileBox = styled.div`
 export const ProfileInput = styled.input`
   display: none;
 `;
-export const Profoleimg = styled.img``;
+export const Profoleimg = styled.img`
+  width: 100px;
+  height: 100px;
+`;
 export const Label = styled.label``;
 
 export const ProfileBoxDetail = styled.div`
