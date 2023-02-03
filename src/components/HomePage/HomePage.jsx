@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { MainWrap, Carousel, CarouselInner } from "./HomePage";
-import Swing from "../../images/swingChip.jpg";
-import Sun from "../../images/sunchip.png";
-import Dodo from "../../images/Nacho.jpg";
-import Banner from "../../images/Banner.png";
-import styled from "styled-components";
-import { db } from "../../firebase";
-import { collection, getDocs } from "firebase/firestore";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { MainWrap, Carousel, CarouselInner } from './HomePage';
+import Swing from '../../images/swingChip.jpg';
+import Sun from '../../images/sunchip.png';
+import Dodo from '../../images/Nacho.jpg';
+import Banner from '../../images/Banner.png';
+import styled from 'styled-components';
+import { db } from '../../firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 export default function Home() {
   const [snacks, setSnacks] = useState([]);
-  const snckcollectionRef = collection(db, "product");
+  const snckcollectionRef = collection(db, 'product');
   const navigate = useNavigate();
   useEffect(() => {
     const getData = async () => {
@@ -53,19 +53,12 @@ export default function Home() {
             <SnackCard key={r.id} id={r.id}>
               <ProducImg
                 onClick={() => {
-                  navigate("/detail");
+                  navigate('/detail');
                 }}
                 src={r.image}
               />
               <SnackName>상품명:{r.name}</SnackName>
               <SnackPrice>판매가:{r.price}</SnackPrice>
-              <button
-                onClick={() => {
-                  alert("담김요");
-                }}
-              >
-                장바구니 +
-              </button>
             </SnackCard>
           );
         })}
