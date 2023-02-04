@@ -1,17 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { MainWrap, Carousel, CarouselInner } from './HomePage';
-import Swing from '../../images/swingChip.jpg';
-import Sun from '../../images/sunchip.png';
-import Dodo from '../../images/Nacho.jpg';
-import Banner from '../../images/Banner.png';
-import styled from 'styled-components';
-import { db } from '../../firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  MainWrap,
+  Carousel,
+  CarouselInner,
+  SnacksImg,
+  ProducImg,
+  ProducImgBox,
+  SnackCard,
+  SnackName,
+  SnackPrice,
+} from "./HomePage";
+import Swing from "../../images/swingChip.jpg";
+import Sun from "../../images/sunchip.png";
+import Dodo from "../../images/Nacho.jpg";
+import Banner from "../../images/Banner.png";
+import styled from "styled-components";
+import { db } from "../../firebase";
+import { collection, getDocs } from "firebase/firestore";
+import DetailComponent from "../Detail/DetailComponent.jsx";
 
-export default function Home() {
+export default function Home({ clickSnacks, setClickSnacks }) {
+  // console.log(clickSnacks);
   const [snacks, setSnacks] = useState([]);
-  const snckcollectionRef = collection(db, 'product');
+  // console.log("snacks :", snacks);
+  const snckcollectionRef = collection(db, "product");
   const navigate = useNavigate();
   useEffect(() => {
     const getData = async () => {
@@ -43,17 +56,43 @@ export default function Home() {
   }, []);
   return (
     <div>
-      <div>
-        <div>배너</div>
-      </div>
+      <Window>
+        <FlexBox>
+          <ImgDiv
+            style={{
+              backgroundImage: `url('https://firebasestorage.googleapis.com/v0/b/pro2-45859.appspot.com/o/SnackPang%2Fss.jpg?alt=media&token=73e68be0-de19-4b0c-a803-66a0758d5110')`,
+            }}
+          ></ImgDiv>
+          <ImgDiv
+            style={{
+              backgroundImage: `url('https://firebasestorage.googleapis.com/v0/b/pro2-45859.appspot.com/o/SnackPang%2FNacho.jpg?alt=media&token=cb3b1dc1-c921-4f63-a232-5e32c8bc5b5f')`,
+            }}
+          ></ImgDiv>
+          <ImgDiv
+            style={{
+              backgroundImage: `url('https://firebasestorage.googleapis.com/v0/b/pro2-45859.appspot.com/o/SnackPang%2Fsunchip.png?alt=media&token=e3aad0b4-2c27-46f6-a961-3fa20a9da7b9')`,
+            }}
+          ></ImgDiv>
+        </FlexBox>
+      </Window>
 
       <ProducImgBox>
         {snacks.map((r) => {
           return (
             <SnackCard key={r.id} id={r.id}>
               <ProducImg
-                onClick={() => {
-                  navigate('/detail');
+                onClick={(e) => {
+                  navigate("/detail");
+                  if (r.image === e.target.src) {
+                    return setClickSnacks({
+                      id: r.id,
+                      name: r.name,
+                      image: r.image,
+                      price: r.price,
+                    });
+                  }
+                  console.log("stateSnack :", clickSnacks);
+                  // setHomeSnackUrl(e.target.src);
                 }}
                 src={r.image}
               />
@@ -66,36 +105,21 @@ export default function Home() {
     </div>
   );
 }
-export const SnacksImg = styled.img`
-  width: 300px;
-  height: 300px;
+export const Window = styled.div`
+  background: coral;
+  width: 350px;
+  height: 250px;
+
+  overflow: hidden;
 `;
-export const ProducImg = styled.img`
-  width: 100px;
-  height: 100px;
-  cursor: pointer;
-`;
-export const ProducImgBox = styled.div`
+export const FlexBox = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
 `;
-export const SnackCard = styled.div`
-  border: 1px solid #df4c2c;
-  padding: 20px;
-  margin-bottom: 20px;
-  width: 23%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border-radius: 10px;
-`;
-export const SnackName = styled.span`
-  font-weight: 800;
-  margin-top: 10px;
-`;
-export const SnackPrice = styled.span`
-  color: #ffa125;
-  font-weight: 500;
-  margin-top: 10px;
+export const ImgDiv = styled.div`
+  width: 350px;
+  height: 250px;
+  background-position: 50% 50%; //이미지를 중앙 위치하게 해준다!
+  background-size: contain; // 컨테인 크기에 맞춰서 이미지가  나옴 나머지 부분은 이미지가 반복되면서 짤려서 나온다
+  background-repeat: no-repeat; //반복하는 이미지를 안나오게하고 원래 배경이 나오게 해준다!
+  flex: none; //flex: 0 0 auto 동일하며 컨테이너의 크기에 관계 없다 // 기본값으로 하면 작은 창안에 사진들이 욱여넣어진다!
 `;

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import blankProfiles from "../../images/blankProfiles.png";
 import {
@@ -15,16 +15,21 @@ import { onAuthStateChanged, updateProfile } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
-export default function MypageComponent() {
+export default function MypageComponent({ setUserImg, userImg }) {
   const [imgFile, setImgFile] = useState("");
-  const [render, setRender] = useState(true);
   const imgRef = useRef();
   const navigate = useNavigate();
   const nickNameRef = useRef("");
   // console.log(auth.currentUser);
   const loginUser = auth.currentUser;
+  // const [displayName,]
+
   console.log("loginuser :", loginUser);
   // console.log(nickNameRef);
+
+  useEffect(() => {
+    console.log(auth);
+  }, []);
 
   const saveImgFile = async () => {
     const file = imgRef.current.files[0];
@@ -44,6 +49,7 @@ export default function MypageComponent() {
     updateProfile(auth.currentUser, {
       photoURL: imgUrl,
     });
+    setUserImg(imgUrl);
     // imgUrl.current = { url: imgUrl };
   };
 
@@ -63,11 +69,12 @@ export default function MypageComponent() {
           <ProfileBoxDetail>
             <Label htmlFor="profile">
               <Profoleimg
-                src={
-                  loginUser.photoURL === null
-                    ? blankProfiles
-                    : loginUser.photoURL
-                }
+                // src={
+                //   loginUser.photoURL === null
+                //     ? blankProfiles
+                //     : loginUser.photoURL
+                // }""  "ㅏ하ㅘㅘ"
+                src={!userImg ? loginUser?.photoURL : userImg}
               />
               <ProfileInput
                 ref={imgRef}
@@ -78,11 +85,11 @@ export default function MypageComponent() {
             </Label>
             <ChangeImgBtn onClick={saveImgFile}>이미지 변경 저장</ChangeImgBtn>
             <h3>MY PROFILE</h3>
-            <p>{loginUser.displayName}</p>
+            <p>{loginUser?.displayName}</p>
             <div>
               <ProfileName
                 ref={nickNameRef}
-                placeholder={loginUser.displayName}
+                placeholder={loginUser?.displayName}
                 type="text"
               />
               <ProfileNameBtn onClick={profileChangeBtn}>변경</ProfileNameBtn>

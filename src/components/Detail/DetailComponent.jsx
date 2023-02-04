@@ -15,15 +15,28 @@ import {
   BtnWrap,
   Btn,
 } from "./DetailComponent";
-import testSnack from "../../images/testSnack.png";
-import sunchip from "../../images/sunchip.png";
-export default function DetailComponent() {
+import { db, auth } from "../../firebase";
+import { v4 as uuidv4 } from "uuid";
+import { addDoc, collection } from "firebase/firestore";
+export default function DetailComponent({ homeSnackUrl, clickSnacks }) {
   const [count, setCount] = useState(1);
+  const loginUser = auth.currentUser;
+  console.log("login:", clickSnacks);
+  const inCartBtn = async () => {
+    const docRef = await addDoc(collection(db, "cartProduct"), {
+      userId: loginUser.uid,
+      id: uuidv4(),
+      name: clickSnacks.name,
+      price: clickSnacks.price,
+      count: { count },
+    });
+    alert("장바구니에 담겼습니다!");
+  };
   return (
     <MainWrap>
       <div>
         <div style={{ display: "flex" }}>
-          <img src={sunchip} />
+          <img src={clickSnacks.image} />
           <div
             style={{
               display: "flex",
@@ -37,7 +50,7 @@ export default function DetailComponent() {
             <span
               style={{ fontSize: "42px", fontWeight: "bold", margin: "20px" }}
             >
-              썬칩
+              {clickSnacks.name}
             </span>
             <span style={{ fontSize: "24px", fontWeight: "bold" }}>
               <button
@@ -76,7 +89,7 @@ export default function DetailComponent() {
                 borderBottom: "1px solid lightgray",
               }}
             >
-              950원
+              {clickSnacks.price}
             </span>
             <hr />
             <span style={{ fontSize: "20px" }}>구매제한</span>
@@ -92,7 +105,7 @@ export default function DetailComponent() {
             <span
               style={{ fontSize: "42px", fontWeight: "bold", margin: "20px" }}
             >
-              TOTAL : 950원
+              TOTAL : {clickSnacks.price} 원
             </span>
             <button
               style={{
@@ -120,6 +133,7 @@ export default function DetailComponent() {
                 cursor: "pointer",
                 marginTop: "10px",
               }}
+              onClick={inCartBtn}
             >
               장바구니
             </button>
