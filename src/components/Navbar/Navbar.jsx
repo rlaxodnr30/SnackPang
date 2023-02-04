@@ -19,10 +19,9 @@ import { getDocs, collection } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-export default function Navbar() {
+export default function Navbar({ setUserImg, userImg }) {
   const [isLogin, setIsLogin] = useState(false);
   const [users, setUsers] = useState("");
-  const [render, setRender] = useState("");
   const navigate = useNavigate();
   const loginUser = auth.currentUser;
 
@@ -40,7 +39,8 @@ export default function Navbar() {
       // console.log(users);
     });
   }, []);
-
+  // console.log(userImg);
+  // console.log("user :", auth.currentUser);
   return (
     <>
       <NavbarBox>
@@ -52,22 +52,15 @@ export default function Navbar() {
         </LeftNav>
 
         <RightNav>
-          <RightNavLink to="/cartpage">
+          <RightNavLink to={isLogin ? "/cartpage" : "/signin"}>
             <CartImg src={cart} />
           </RightNavLink>
-          <RightNavLink to="/mypage">
+          <RightNavLink to={isLogin ? "/mypage" : "/signin"}>
             <Porduc>마이페이지</Porduc>
           </RightNavLink>
           <ImgBox>
-            <ImgBoxImg
-              src={
-                isLogin ? (
-                  loginUser.photoURL
-                ) : (
-                  <ImgBoxImg style={{ display: "none" }} />
-                )
-              }
-            ></ImgBoxImg>
+            {isLogin ? <ImgBoxImg src={userImg} /> : null}
+            {/* <ImgBoxImg src={isLogin ? loginUser.photoURL : null}></ImgBoxImg> */}
           </ImgBox>
 
           <RightNavLink to="/signup">
