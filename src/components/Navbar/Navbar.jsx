@@ -11,6 +11,7 @@ import {
   RightNavLink,
 } from "./Navbar";
 import homeLogo from "../../images/image 2.png";
+import blankProfiles from "../../images/blankProfiles.png";
 import cart from "../../images/shopping.png";
 import { auth, db } from "../../firebase";
 import { signOut } from "firebase/auth";
@@ -59,7 +60,9 @@ export default function Navbar({ setUserImg, userImg }) {
             <Porduc>마이페이지</Porduc>
           </RightNavLink>
           <ImgBox>
-            {isLogin ? <ImgBoxImg src={userImg} /> : null}
+            {isLogin ? (
+              <ImgBoxImg src={!userImg ? blankProfiles : userImg} />
+            ) : null}
             {/* <ImgBoxImg src={isLogin ? loginUser.photoURL : null}></ImgBoxImg> */}
           </ImgBox>
 

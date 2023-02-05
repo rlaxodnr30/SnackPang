@@ -60,11 +60,6 @@ export default function Home({ clickSnacks, setClickSnacks }) {
         <FlexBox>
           <ImgDiv
             style={{
-              backgroundImage: `url('https://firebasestorage.googleapis.com/v0/b/pro2-45859.appspot.com/o/SnackPang%2Fss.jpg?alt=media&token=73e68be0-de19-4b0c-a803-66a0758d5110')`,
-            }}
-          ></ImgDiv>
-          <ImgDiv
-            style={{
               backgroundImage: `url('https://firebasestorage.googleapis.com/v0/b/pro2-45859.appspot.com/o/SnackPang%2FNacho.jpg?alt=media&token=cb3b1dc1-c921-4f63-a232-5e32c8bc5b5f')`,
             }}
           ></ImgDiv>
