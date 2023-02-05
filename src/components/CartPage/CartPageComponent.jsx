@@ -57,12 +57,11 @@ export default function CartPageComponent() {
               {userCartProduct.map((item, i) => {
                 if (item.userId === loginUser.uid) {
                   return (
-                    <tr>
+                    <tr key={item.id}>
                       <td>{i}</td>
                       <td>{item.name}</td>
                       <td>{item.count.count}</td>
                       <td>{item.price * item.count.count}원</td>
-                      <button>삭제</button>
                     </tr>
                   );
                 }

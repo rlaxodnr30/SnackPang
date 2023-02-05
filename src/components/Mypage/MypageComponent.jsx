@@ -74,7 +74,8 @@ export default function MypageComponent({ setUserImg, userImg }) {
                 //     ? blankProfiles
                 //     : loginUser.photoURL
                 // }""  "ㅏ하ㅘㅘ"
-                src={!userImg ? loginUser?.photoURL : userImg}
+                // src={!userImg ? loginUser?.photoURL : userImg}
+                src={!userImg ? blankProfiles : userImg}
               />
               <ProfileInput
                 ref={imgRef}

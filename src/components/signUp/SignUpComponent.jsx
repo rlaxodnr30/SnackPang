@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import {
   InputTitle,
@@ -14,14 +14,17 @@ import {
 } from "./SignUpComponent";
 import googles from "../../images/googleicon.png";
 import github from "../../images/githubicon.png";
-import { auth, db } from "../../firebase.js";
+import { auth, db, provider } from "../../firebase.js";
+
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInWithPopup,
   updateProfile,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { addDoc, collection } from "firebase/firestore";
+import { getDownloadURL, ref } from "firebase/storage";
 
 export default function SignUpComponent() {
   //useRef input값 받아오기
@@ -29,6 +32,8 @@ export default function SignUpComponent() {
   const pwRef = useRef(null);
   const nameRef = useRef(null);
   const navigate = useNavigate();
+
+  // 구글로그인
 
   //회원가입
   const signUpBtn = async () => {
@@ -79,6 +84,7 @@ export default function SignUpComponent() {
       if (auth.currentUser)
         updateProfile(auth?.currentUser, {
           displayName: inputname,
+          // photoURL: profileUrl,
         });
       // console.log(auth);
     });
@@ -91,7 +97,10 @@ export default function SignUpComponent() {
     // console.log(userLogin);
     navigate("/");
   };
-
+  const googlelogin = async () => {
+    const googlelog = await signInWithPopup(auth, provider);
+    console.log(googlelog);
+  };
   return (
     <>
       <SignUpBox>
@@ -140,7 +149,7 @@ export default function SignUpComponent() {
             </ButtonSocial>
           </SocialBtnBox>
           <SocialBtnBox>
-            <ButtonSocial type="button">
+            <ButtonSocial onClick={googlelogin} type="button">
               <SocialIcon src={googles} />
               구글 로그인
             </ButtonSocial>
