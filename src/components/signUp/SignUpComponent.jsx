@@ -33,8 +33,6 @@ export default function SignUpComponent() {
   const nameRef = useRef(null);
   const navigate = useNavigate();
 
-  // 구글로그인
-
   //회원가입
   const signUpBtn = async () => {
     // console.log(
@@ -97,10 +95,12 @@ export default function SignUpComponent() {
     // console.log(userLogin);
     navigate("/");
   };
-  const googlelogin = async () => {
-    const googlelog = await signInWithPopup(auth, provider);
-    console.log(googlelog);
-  };
+  // 구글로그인
+  // const googlelogin = async () => {
+  //   const googlelog = await signInWithPopup(auth, provider);
+  //   console.log(googlelog);
+  // };
+
   return (
     <>
       <SignUpBox>
@@ -142,7 +142,7 @@ export default function SignUpComponent() {
               회원가입
             </ButtonSign>
           </ButtonBox>
-          <SocialBtnBox>
+          {/* <SocialBtnBox>
             <ButtonSocial type="button">
               <SocialIcon src={github} />
               깃헙 로그인
@@ -153,7 +153,7 @@ export default function SignUpComponent() {
               <SocialIcon src={googles} />
               구글 로그인
             </ButtonSocial>
-          </SocialBtnBox>
+          </SocialBtnBox> */}
         </SignInput>
       </SignUpBox>
     </>

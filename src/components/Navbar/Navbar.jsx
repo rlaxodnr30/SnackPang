@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   HomeLogo,
   LeftNav,
@@ -9,6 +9,7 @@ import {
   LogBtn,
   Porduc,
   RightNavLink,
+  LogiBtn,
 } from "./Navbar";
 import homeLogo from "../../images/image 2.png";
 import blankProfiles from "../../images/blankProfiles.png";
@@ -19,12 +20,15 @@ import { onAuthStateChanged } from "firebase/auth";
 import { getDocs, collection } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { ThemeContext } from "../../context/ThemeContext";
 
 export default function Navbar({ setUserImg, userImg }) {
   const [isLogin, setIsLogin] = useState(false);
   const [users, setUsers] = useState("");
   const navigate = useNavigate();
   const loginUser = auth.currentUser;
+  const { isDark } = useContext(ThemeContext);
+  console.log(isDark);
 
   // auth.currentUser
   //------------
@@ -44,7 +48,7 @@ export default function Navbar({ setUserImg, userImg }) {
   // console.log("user :", auth.currentUser);
   return (
     <>
-      <NavbarBox>
+      <NavbarBox style={{ backgroundColor: isDark ? "black" : "#dfdfdf" }}>
         <LeftNav>
           <LeftNavLink to="/">
             <HomeLogo src={homeLogo} />
@@ -66,17 +70,20 @@ export default function Navbar({ setUserImg, userImg }) {
             {/* <ImgBoxImg src={isLogin ? loginUser.photoURL : null}></ImgBoxImg> */}
           </ImgBox>
 
-          <RightNavLink to="/signup">
-            <LogBtn>{isLogin ? users.displayName : "회원가입"}</LogBtn>
-          </RightNavLink>
+          {isLogin ? (
+            <LogBtn>{users.displayName}</LogBtn>
+          ) : (
+            <RightNavLink to="/signup">회원가입</RightNavLink>
+          )}
+
           <RightNavLink to="/signin">
-            <LogBtn
+            <LogiBtn
               onClick={() => {
                 signOut(auth);
               }}
             >
               {isLogin ? "로그아웃" : "로그인"}
-            </LogBtn>
+            </LogiBtn>
           </RightNavLink>
         </RightNav>
       </NavbarBox>

@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import styled from 'styled-components';
+import React, { useContext, useRef } from "react";
+import styled from "styled-components";
 import {
   InputTitle,
   SignInput,
@@ -12,33 +12,57 @@ import {
   SocialBtnBox,
   SocialIcon,
   LogoImg,
-} from './SignInComponent';
-import { useNavigate } from 'react-router-dom';
-import { auth } from '../../firebase.js';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import googles from '../../images/googleicon.png';
-import github from '../../images/githubicon.png';
-import snckPang from '../../images/image 1.png';
+} from "./SignInComponent";
+import { useNavigate } from "react-router-dom";
+import { auth, provider, providergit } from "../../firebase.js";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import googles from "../../images/googleicon.png";
+import github from "../../images/githubicon.png";
+import snckPang from "../../images/image 1.png";
+import { ThemeContext } from "../../context/ThemeContext";
 
 export default function SignInComponent() {
+  const { isDark } = useContext(ThemeContext);
   const navigate = useNavigate();
   const idRef = useRef(null);
   const pwRef = useRef(null);
-
+  //로그인
   const singIN = async () => {
     const login = await signInWithEmailAndPassword(
       auth,
       idRef.current.value,
       pwRef.current.value
     );
-    alert('로그인 성공');
+    alert("로그인 성공");
     console.log(login);
-    navigate('/');
+    navigate("/");
   };
-
+  //구글로그인
+  const googlelogin = async () => {
+    try {
+      const googlelog = await signInWithPopup(auth, provider);
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //깃 로그인
+  const gitlogin = async () => {
+    try {
+      const gitlog = await signInWithPopup(auth, providergit);
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <>
-      <SignUpBox>
+      <SignUpBox
+        style={{
+          backgroundColor: isDark ? "black" : "white",
+          color: isDark ? "white" : "black",
+        }}
+      >
         <SignInput>
           <LogoImg src={snckPang} />
 
@@ -47,8 +71,8 @@ export default function SignInComponent() {
             <InputempwBox>
               <Inputempw
                 ref={idRef}
-                placeholder='snackpang@snackpang.com'
-                type='text'
+                placeholder="snackpang@snackpang.com"
+                type="text"
               />
             </InputempwBox>
           </div>
@@ -57,24 +81,24 @@ export default function SignInComponent() {
             <InputempwBox>
               <Inputempw
                 ref={pwRef}
-                type='password'
-                placeholder='비밀번호를 입력해주세요.'
+                type="password"
+                placeholder="비밀번호를 입력해주세요."
               />
             </InputempwBox>
           </div>
           <ButtonBox>
-            <ButtonSign onClick={singIN} type='submit'>
+            <ButtonSign onClick={singIN} type="submit">
               로그인
             </ButtonSign>
           </ButtonBox>
           <SocialBtnBox>
-            <ButtonSocial type='button'>
+            <ButtonSocial onClick={gitlogin} type="button">
               <SocialIcon src={github} />
               깃헙 로그인
             </ButtonSocial>
           </SocialBtnBox>
           <SocialBtnBox>
-            <ButtonSocial type='button'>
+            <ButtonSocial onClick={googlelogin} type="button">
               <SocialIcon src={googles} />
               구글 로그인
             </ButtonSocial>

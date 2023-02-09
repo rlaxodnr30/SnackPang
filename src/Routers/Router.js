@@ -13,9 +13,10 @@ import Footer from "../components/Footer/Footer.jsx";
 export default function Router() {
   const [userImg, setUserImg] = useState("");
   const [clickSnacks, setClickSnacks] = useState([]);
+  const [userNick, setUserNick] = useState("");
   return (
     <BrowserRouter>
-      <Navbar setUserImg={setUserImg} userImg={userImg} />
+      <Navbar setUserImg={setUserImg} userImg={userImg} userNick={userNick} />
       <Routes>
         <Route
           path="/"
@@ -27,7 +28,14 @@ export default function Router() {
         <Route path="/signin" element={<SignIn />} />
         <Route
           path="/mypage"
-          element={<Mypage setUserImg={setUserImg} userImg={userImg} />}
+          element={
+            <Mypage
+              userNick={userNick}
+              setUserNick={setUserNick}
+              setUserImg={setUserImg}
+              userImg={userImg}
+            />
+          }
         />
         <Route path="/product" element={<Product />} />
         <Route path="/cartpage" element={<CartPage />} />
