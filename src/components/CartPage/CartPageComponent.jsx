@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import React, { useContext, useEffect, useState } from "react";
+
 import ShoppingText from "../../images/ShoppingText.png";
 import {
   ShoppingImgBox,
@@ -11,8 +11,10 @@ import {
 } from "./CartPageComponent";
 import { db, auth } from "../../firebase";
 import { collection, doc, getDocs, query, where } from "firebase/firestore";
+import { ThemeContext } from "../../context/ThemeContext";
 
 export default function CartPageComponent() {
+  const { isDark } = useContext(ThemeContext);
   const [userCartProduct, setUserCartProduct] = useState([]);
   console.log("usercart:", userCartProduct);
   const loginUser = auth.currentUser;
@@ -35,7 +37,12 @@ export default function CartPageComponent() {
   // console.log(loginUser.uid);
   return (
     <>
-      <CartBox>
+      <CartBox
+        style={{
+          backgroundColor: isDark ? "black" : "white",
+          color: isDark ? "white" : "black",
+        }}
+      >
         <ShoppingImgBox>
           <img src={ShoppingText} />
           <hr />

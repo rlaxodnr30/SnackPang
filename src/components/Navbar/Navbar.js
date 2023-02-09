@@ -38,9 +38,13 @@ export const CartImg = styled.img`
 export const LogBtn = styled.button`
   border: none;
   background-color: #dfdfdf;
-  margin-right: 10px;
-  font-weight: bold;
-  cursor: pointer;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: black;
+  font-weight: 600;
+  padding-top: 3px;
+  font-size: 15px;
 `;
 export const Porduc = styled.span`
   border: none;
@@ -54,5 +58,18 @@ export const RightNavLink = styled(NavLink)`
   display: flex;
   align-items: center;
   text-decoration: none;
-  color: white;
+  color: black;
+  font-weight: 500;
+`;
+export const LogiBtn = styled.button`
+  border: none;
+  background-color: #dfdfdf;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: black;
+  font-weight: 600;
+  padding-top: 3px;
+  font-size: 15px;
+  cursor: pointer;
 `;

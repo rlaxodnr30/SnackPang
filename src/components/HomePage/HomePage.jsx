@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   MainWrap,
@@ -19,8 +19,10 @@ import styled from "styled-components";
 import { db } from "../../firebase";
 import { collection, getDocs } from "firebase/firestore";
 import DetailComponent from "../Detail/DetailComponent.jsx";
+import { ThemeContext } from "../../context/ThemeContext";
 
 export default function Home({ clickSnacks, setClickSnacks }) {
+  const { isDark } = useContext(ThemeContext);
   // console.log(clickSnacks);
   const [snacks, setSnacks] = useState([]);
   // console.log("snacks :", snacks);
@@ -55,7 +57,12 @@ export default function Home({ clickSnacks, setClickSnacks }) {
     getData();
   }, []);
   return (
-    <div>
+    <div
+      style={{
+        backgroundColor: isDark ? "black" : "white",
+        color: isDark ? "white" : "black",
+      }}
+    >
       <Window>
         <FlexBox>
           <ImgDiv

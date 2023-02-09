@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import snack from "../../images/image 1.png";
 import { FooterBox, FooterBoxDetail, Snackpang } from "./Footer";
+import { ThemeContext } from "../../context/ThemeContext";
 export default function Footer() {
+  const { isDark, setIsDark } = useContext(ThemeContext);
   return (
     <>
-      <FooterBox>
+      <FooterBox
+        style={{
+          backgroundColor: isDark ? "black" : "white",
+          color: isDark ? "white" : "black",
+        }}
+      >
         <FooterBoxDetail>
           <Snackpang src={snack} />
           <hr />
@@ -15,7 +22,14 @@ export default function Footer() {
             김스낵(SnackPang@dev.com) 고객만족센터 : 000-1234-5678
             [문의전클릭]팩스 : 02-1234-5678 카카오톡 ID : SnackPang 사업장
             소재지 : 12129 서울특별시 강남구 테헤란로 123 스낵타워 2층 Copyright
-            © SnackPang, All rights reserved.
+            © SnackPang, All rights reserved.{" "}
+            <button
+              onClick={() => {
+                setIsDark(!isDark);
+              }}
+            >
+              {isDark ? "White Mode" : "Dark Mode"}
+            </button>
           </span>
         </FooterBoxDetail>
       </FooterBox>
