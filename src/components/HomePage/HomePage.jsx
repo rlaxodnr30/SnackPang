@@ -15,6 +15,7 @@ import Swing from "../../images/swingChip.jpg";
 import Sun from "../../images/sunchip.png";
 import Dodo from "../../images/Nacho.jpg";
 import Banner from "../../images/Banner.png";
+import snackMain from "../../images/snackMain.mp4";
 import styled from "styled-components";
 import { db } from "../../firebase";
 import { collection, getDocs } from "firebase/firestore";
@@ -23,11 +24,34 @@ import { ThemeContext } from "../../context/ThemeContext";
 
 export default function Home({ clickSnacks, setClickSnacks }) {
   const { isDark } = useContext(ThemeContext);
-  // console.log(clickSnacks);
+  const [showButton, setShowButton] = useState(false);
   const [snacks, setSnacks] = useState([]);
   // console.log("snacks :", snacks);
   const snckcollectionRef = collection(db, "product");
   const navigate = useNavigate();
+
+  const scrollTop = () => {
+    window.scroll({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  useEffect(() => {
+    const showButtonClick = () => {
+      if (window.scrollY > 800) {
+        setShowButton(true);
+      } else {
+        setShowButton(false);
+      }
+    };
+    window.addEventListener("scroll", showButtonClick);
+    return () => {
+      window.removeEventListener("scroll", showButtonClick);
+    };
+  }, []);
+
+  // 홈페이지에 있을때만 실행되는 것.
   useEffect(() => {
     const getData = async () => {
       const data = await getDocs(snckcollectionRef);
@@ -59,24 +83,22 @@ export default function Home({ clickSnacks, setClickSnacks }) {
   return (
     <div
       style={{
-        backgroundColor: isDark ? "black" : "white",
+        backgroundColor: isDark ? "black" : "#d5d5d3",
         color: isDark ? "white" : "black",
       }}
     >
-      <Window>
-        <FlexBox>
-          <ImgDiv
-            style={{
-              backgroundImage: `url('https://firebasestorage.googleapis.com/v0/b/pro2-45859.appspot.com/o/SnackPang%2FNacho.jpg?alt=media&token=cb3b1dc1-c921-4f63-a232-5e32c8bc5b5f')`,
-            }}
-          ></ImgDiv>
-          <ImgDiv
-            style={{
-              backgroundImage: `url('https://firebasestorage.googleapis.com/v0/b/pro2-45859.appspot.com/o/SnackPang%2Fsunchip.png?alt=media&token=e3aad0b4-2c27-46f6-a961-3fa20a9da7b9')`,
-            }}
-          ></ImgDiv>
-        </FlexBox>
-      </Window>
+      <video
+        style={{ width: "100%" }}
+        src={snackMain}
+        muted
+        autoPlay
+        loop
+      ></video>
+      <HomeImg
+        style={{
+          backgroundImage: "url(/backImg.jpg)",
+        }}
+      ></HomeImg>
 
       <ProducImgBox>
         {snacks.map((r) => {
@@ -84,7 +106,7 @@ export default function Home({ clickSnacks, setClickSnacks }) {
             <SnackCard key={r.id} id={r.id}>
               <ProducImg
                 onClick={(e) => {
-                  navigate("/detail");
+                  navigate(`/detail/${r.id}`);
                   if (r.image === e.target.src) {
                     return setClickSnacks({
                       id: r.id,
@@ -99,29 +121,42 @@ export default function Home({ clickSnacks, setClickSnacks }) {
                 src={r.image}
               />
               <SnackName>상품명:{r.name}</SnackName>
-              <SnackPrice>판매가:{r.price}</SnackPrice>
+              <SnackPrice>판매가:{r.price}원</SnackPrice>
             </SnackCard>
           );
         })}
+        {showButton && (
+          <StMoveTopButton onClick={scrollTop}>︿</StMoveTopButton>
+        )}
       </ProducImgBox>
     </div>
   );
 }
-export const Window = styled.div`
-  background: coral;
-  width: 350px;
-  height: 250px;
 
-  overflow: hidden;
+export const HomeImg = styled.div`
+  background-size: cover;
+  width: 100%;
+  height: 500px;
 `;
-export const FlexBox = styled.div`
+const StMoveTopButton = styled.div`
+  height: 60px;
+  width: 60px;
+  position: fixed;
+  bottom: 150px;
+  right: 100px;
+  z-index: 1;
+  border: none;
+  outline: none;
+  background: gray;
+  color: white;
+  cursor: pointer;
+  border-radius: 30px;
+  font-size: 18px;
+  font-weight: 700;
   display: flex;
-`;
-export const ImgDiv = styled.div`
-  width: 350px;
-  height: 250px;
-  background-position: 50% 50%; //이미지를 중앙 위치하게 해준다!
-  background-size: contain; // 컨테인 크기에 맞춰서 이미지가  나옴 나머지 부분은 이미지가 반복되면서 짤려서 나온다
-  background-repeat: no-repeat; //반복하는 이미지를 안나오게하고 원래 배경이 나오게 해준다!
-  flex: none; //flex: 0 0 auto 동일하며 컨테이너의 크기에 관계 없다 // 기본값으로 하면 작은 창안에 사진들이 욱여넣어진다!
+  align-items: center;
+  justify-content: center;
+  @media screen and (max-width: 800px) {
+    display: none;
+  }
 `;

@@ -17,8 +17,8 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { ThemeContext } from "../../context/ThemeContext";
 
 export default function MypageComponent({
-  setUserImg,
-  userImg,
+  setUserImage,
+  userImage,
   userNick,
   setUserNick,
 }) {
@@ -59,7 +59,8 @@ export default function MypageComponent({
     updateProfile(auth.currentUser, {
       photoURL: imgUrl,
     });
-    setUserImg(imgUrl);
+
+    setUserImage(imgUrl);
     // imgUrl.current = { url: imgUrl };
   };
 
@@ -90,7 +91,7 @@ export default function MypageComponent({
                 //     : loginUser.photoURL
                 // }""  "ㅏ하ㅘㅘ"
                 // src={!userImg ? loginUser?.photoURL : userImg}
-                src={!userImg ? blankProfiles : userImg}
+                src={!userImage ? blankProfiles : userImage}
               />
               <ProfileInput
                 ref={imgRef}
