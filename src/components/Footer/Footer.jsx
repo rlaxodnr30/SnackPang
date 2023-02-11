@@ -9,7 +9,7 @@ export default function Footer() {
     <>
       <FooterBox
         style={{
-          backgroundColor: isDark ? "black" : "white",
+          backgroundColor: isDark ? "black" : "#d5d5d3",
           color: isDark ? "white" : "black",
         }}
       >
@@ -23,16 +23,21 @@ export default function Footer() {
             [문의전클릭]팩스 : 02-1234-5678 카카오톡 ID : SnackPang 사업장
             소재지 : 12129 서울특별시 강남구 테헤란로 123 스낵타워 2층 Copyright
             © SnackPang, All rights reserved.{" "}
-            <button
+            <FooterDark
               onClick={() => {
                 setIsDark(!isDark);
               }}
             >
               {isDark ? "White Mode" : "Dark Mode"}
-            </button>
+            </FooterDark>
           </span>
         </FooterBoxDetail>
       </FooterBox>
     </>
   );
 }
+const FooterDark = styled.button`
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+`;

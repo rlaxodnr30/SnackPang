@@ -22,7 +22,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { ThemeContext } from "../../context/ThemeContext";
 
-export default function Navbar({ setUserImg, userImg }) {
+export default function Navbar({ userImage, setUserImage }) {
   const [isLogin, setIsLogin] = useState(false);
   const [users, setUsers] = useState("");
   const navigate = useNavigate();
@@ -42,8 +42,12 @@ export default function Navbar({ setUserImg, userImg }) {
       setUsers(user);
       // console.log(user);
       // console.log(users);
+      if (user) {
+        setUserImage(auth.currentUser.photoURL);
+      }
     });
   }, []);
+
   // console.log(userImg);
   // console.log("user :", auth.currentUser);
   return (
@@ -65,7 +69,8 @@ export default function Navbar({ setUserImg, userImg }) {
           </RightNavLink>
           <ImgBox>
             {isLogin ? (
-              <ImgBoxImg src={!userImg ? blankProfiles : userImg} />
+              // <ImgBoxImg src={!userImg ? blankProfiles : userImg} />
+              <ImgBoxImg src={userImage ? userImage : blankProfiles} />
             ) : null}
             {/* <ImgBoxImg src={isLogin ? loginUser.photoURL : null}></ImgBoxImg> */}
           </ImgBox>

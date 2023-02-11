@@ -11,12 +11,18 @@ import SignIn from "../pages/SignIn";
 import SignUp from "../pages/SignUp";
 import Footer from "../components/Footer/Footer.jsx";
 export default function Router() {
-  const [userImg, setUserImg] = useState("");
+  // const [userImg, setUserImg] = useState("");
   const [clickSnacks, setClickSnacks] = useState([]);
   const [userNick, setUserNick] = useState("");
+  const [userImage, setUserImage] = useState("");
+  console.log("clickSnack", clickSnacks);
   return (
     <BrowserRouter>
-      <Navbar setUserImg={setUserImg} userImg={userImg} userNick={userNick} />
+      <Navbar
+        setUserImage={setUserImage}
+        userImage={userImage}
+        userNick={userNick}
+      />
       <Routes>
         <Route
           path="/"
@@ -32,15 +38,15 @@ export default function Router() {
             <Mypage
               userNick={userNick}
               setUserNick={setUserNick}
-              setUserImg={setUserImg}
-              userImg={userImg}
+              setUserImage={setUserImage}
+              userImage={userImage}
             />
           }
         />
         <Route path="/product" element={<Product />} />
         <Route path="/cartpage" element={<CartPage />} />
         <Route
-          path="/detail"
+          path="/detail/:id"
           element={<DetailPage clickSnacks={clickSnacks} />}
         />
         <Route path="/Admin" element={<AdminComponent />} />

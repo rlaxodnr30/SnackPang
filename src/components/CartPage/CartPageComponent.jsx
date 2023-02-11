@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 
-import ShoppingText from "../../images/ShoppingText.png";
+import ShoppingText1 from "../../images/ShoppingText.png";
 import {
   ShoppingImgBox,
   CartList,
@@ -18,6 +18,7 @@ export default function CartPageComponent() {
   const [userCartProduct, setUserCartProduct] = useState([]);
   console.log("usercart:", userCartProduct);
   const loginUser = auth.currentUser;
+  console.log(loginUser);
   useEffect(() => {
     const cartProduct = async () => {
       const cartData = await getDocs(collection(db, "cartProduct"));
@@ -44,7 +45,7 @@ export default function CartPageComponent() {
         }}
       >
         <ShoppingImgBox>
-          <img src={ShoppingText} />
+          <img src={ShoppingText1} />
           <hr />
         </ShoppingImgBox>
 

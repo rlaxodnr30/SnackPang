@@ -20,25 +20,68 @@ import { v4 as uuidv4 } from "uuid";
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDocs,
+  onSnapshot,
+  query,
   updateDoc,
 } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
-import ms from "../../images/ms.jpg";
+import { useNavigate, useParams } from "react-router-dom";
+
 import styled from "styled-components";
+import DetailReview from "./DetailReview";
 export default function DetailComponent({ homeSnackUrl, clickSnacks }) {
   const [count, setCount] = useState(1);
   const [reviewContent, setReviewContent] = useState("");
   const [reviewList, setReviewList] = useState([]);
+
+  // const [reviewCount, setReviewCount] = useState(reviewCount)  리뷰개수
   const navigate = useNavigate();
-  // console.log("rev:", clickSnacks);
-  console.log("user:", auth.currentUser);
+
+  const [snack, setSnack] = useState({});
+  const [snacks, setSnacks] = useState([]);
+  const snckcollectionRef = collection(db, "product");
+  const { id } = useParams();
+
   const loginUser = auth.currentUser;
   console.log("click:", clickSnacks);
   console.log("revList:", reviewList);
 
+  // const date = new Date();
+  // console.log(date);
   // const snackDoc = doc(db, 'cartProduct')
+
+  useEffect(() => {
+    const getData = async () => {
+      const data = await getDocs(snckcollectionRef);
+      setSnacks(
+        data.docs.map((doc) => ({
+          id: doc.id,
+          name: doc.data().name,
+          price: doc.data().price,
+          image: doc.data().image,
+        }))
+      );
+    };
+
+    getData();
+
+    // 리스트에서 현재 페이지에 있는 과자의 정보만 빼야되잖아.
+    // snack.filter(item => item.name === 현재페이지과자이름)
+    // localhost:3000/detail/과자아이디
+  }, []);
+
+  useEffect(() => {
+    const findSnack = snacks.find((item) => {
+      return item.id === id;
+    });
+
+    setSnack(findSnack);
+
+    // filter => [ {과자정보} ]
+    // find => { 과자정보 }
+  }, [snacks]);
 
   const inCartBtn = async () => {
     if (loginUser === null) {
@@ -55,7 +98,7 @@ export default function DetailComponent({ homeSnackUrl, clickSnacks }) {
       let incartProductId = null; // 이미장바구니에 있는과자아이디 표시
       let incartProductCount = 0; // 이미장바구니에있는과자수량
 
-      // 반복문이랑 똑같음.
+      // // // 반복문이랑 똑같음.
       cartData.docs.forEach((doc) => {
         if (clickSnacks.name === doc.data().name) {
           console.log(clickSnacks.name, doc.data().name);
@@ -65,16 +108,15 @@ export default function DetailComponent({ homeSnackUrl, clickSnacks }) {
           return;
         }
       });
-
+      console.log("asd", incartProductId, incartProductCount.count);
       if (incartProduct === true) {
         // 이미 있는 애의 수량에서 추가할 수량을 더해주고
-        // const snackDocRef = doc(db, "id", 이미장바구니에있는과자아이디);
-
-        // await updateDoc(snackDocRef, {
-        //   ...snackDocRef,
-        //   count: count + 이미장바구니에있는과자수량,
-        // });
-        alert("이미 장바구니에 있습니다!");
+        const snackDocRef = doc(db, "cartProduct", incartProductId);
+        await updateDoc(snackDocRef, {
+          // ...snackDocRef,
+          count: { ...count, count: incartProductCount.count + count }, //이미있는수를더함
+        });
+        console.log("이미 장바구니에 있습니다!");
       } else {
         const docRef = await addDoc(collection(db, "cartProduct"), {
           userId: loginUser.uid,
@@ -85,44 +127,77 @@ export default function DetailComponent({ homeSnackUrl, clickSnacks }) {
         });
         alert("장바구니에 담겼습니다!");
       }
+
       // console.log("id : ", doc.id);
       // console.log("name : ", doc.data().name);
       // console.log("price : ", doc.data().price);
       // console.log("count : ", doc.data().count);
       // console.log("userId : ", doc.data().userId);
-
-      console.log(cartData);
     }
   };
   const addReivew = async () => {
+    if (!loginUser) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+
+    // 저 userId로 firebase에서 찾아서 가져오는 거
+    //
     const goReview = await addDoc(collection(db, "userReview"), {
       content: reviewContent,
       userId: loginUser.uid,
-      date: new Date(),
+      userImage: loginUser.photoURL,
+      // date: new Date(),
       displayName: loginUser.displayName,
       snackName: clickSnacks.name,
       imageUrl: clickSnacks.image,
       userImg: loginUser.photoURL,
     });
     alert("소중한 리뷰 감사합니다!");
-    navigate("/");
   };
-
+  //데이터 리뷰가져오기
   useEffect(() => {
     const getReviews = async () => {
-      const getReview = await getDocs(collection(db, "userReview"));
-      setReviewList(
-        getReview.docs.map((doc) => ({
+      const q = query(collection(db, "userReview"));
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        //이걸쓴이유
+        const review = querySnapshot.docs.map((doc) => ({
+          //소괄호 중괄호 하는이유 객체인걸 알려주려고 씀
           id: doc.id,
-          content: doc.data().content,
-          date: doc.data().date,
-          userId: doc.data().userId,
-          displayName: doc.data().displayName,
-          imgurl: clickSnacks.image,
-          snackName: doc.data().snackName,
-          userImg: doc.data().userImg,
-        }))
-      );
+          ...doc.data(),
+        }));
+
+        // const test = [1,2,3].map((item) => item);
+        // const test = [1,2,3].map((item) => {item});
+        // const function = () => {}
+
+        // const review = querySnapshot.docs.map((doc) => {
+        //   return {
+        //     id: doc.id,
+        //     ...doc.data(),
+        //   }
+        // })
+
+        // ...
+        // doc.data() => { a: 1, b: 2 }
+        // ...doc.data() => a:1, b:2
+        setReviewList(review);
+      });
+      return unsubscribe;
+      // const getReview = await getDocs(collection(db, "userReview"));
+      // setReviewList(
+      //   getReview.docs.map((doc) => ({
+      //     id: doc.id,
+      //     ...doc.data(),
+      // content: doc.data().content,
+      // date: doc.data().date,
+      // userId: doc.data().userId,
+      // displayName: doc.data().displayName,
+      // imgurl: clickSnacks.image,
+      // snackName: doc.data().snackName,
+      // userImg: doc.data().userImg,
+      //   }))
+      // );
     };
     getReviews();
   }, []);
@@ -138,7 +213,7 @@ export default function DetailComponent({ homeSnackUrl, clickSnacks }) {
           }}
         >
           <div>
-            <img src={clickSnacks.image} />
+            <img src={snack?.image} />
           </div>
           <div
             style={{
@@ -153,7 +228,7 @@ export default function DetailComponent({ homeSnackUrl, clickSnacks }) {
             <span
               style={{ fontSize: "42px", fontWeight: "bold", margin: "20px" }}
             >
-              {clickSnacks.name}
+              {snack?.name}
             </span>
             <span style={{ fontSize: "24px", fontWeight: "bold" }}>
               <button
@@ -194,7 +269,7 @@ export default function DetailComponent({ homeSnackUrl, clickSnacks }) {
                 borderBottom: "1px solid lightgray",
               }}
             >
-              {clickSnacks.price}
+              {snack?.price}
             </span>
             <hr />
             <span style={{ fontSize: "20px" }}>구매제한</span>
@@ -210,7 +285,7 @@ export default function DetailComponent({ homeSnackUrl, clickSnacks }) {
             <span
               style={{ fontSize: "42px", fontWeight: "bold", margin: "20px" }}
             >
-              TOTAL : {clickSnacks.price} 원
+              TOTAL : {snack?.price} 원
             </span>
             <button
               style={{
@@ -238,7 +313,9 @@ export default function DetailComponent({ homeSnackUrl, clickSnacks }) {
                 cursor: "pointer",
                 marginTop: "10px",
               }}
-              onClick={inCartBtn}
+              onClick={() => {
+                inCartBtn();
+              }}
             >
               장바구니
             </button>
@@ -277,56 +354,18 @@ export default function DetailComponent({ homeSnackUrl, clickSnacks }) {
               marginTop: "40px",
             }}
           >
-            {reviewList.map((item) => {
-              if (item.snackName === clickSnacks.name) {
+            {reviewList.map((item, i) => {
+              if (item.snackName === snack?.name) {
                 return (
-                  <ReviewBigBox>
-                    <div style={{ width: "150px" }}>
-                      <UserProfileImgBox>
-                        <ProfileImg src={loginUser.photoURL} />
-                      </UserProfileImgBox>
-                      <div>
-                        <UserReviewName>{loginUser.displayName}</UserReviewName>
-                      </div>
-                      <Date>2023.02.09</Date>
-                      <ProductName>{item.snackName}</ProductName>
-                    </div>
-                    <ContentBox>
-                      <Content>{item.content}</Content>
-                    </ContentBox>
-                  </ReviewBigBox>
+                  <DetailReview
+                    id={item.id}
+                    reviewList={reviewList}
+                    item={item}
+                    i={i}
+                  />
                 );
               }
             })}
-
-            {/* <table style={{ width: "100%" }}>
-              <thead>
-                <tr>
-                  <th>닉네임</th>
-                  <th>리뷰내용</th>
-                  <th>날짜</th>
-                </tr>
-              </thead>
-              <tr>
-                {reviewList.map((item) => {
-                  if (item.snackName === clickSnacks.name) {
-                    return (
-                      <>
-                        <img
-                          style={{
-                            width: "40",
-                            height: "40px",
-                          }}
-                          src={item.userImg}
-                        />
-                        <td>{item.displayName}</td>
-                        <td>{item.content}</td>
-                      </>
-                    );
-                  }
-                })}
-              </tr>
-            </table> */}
           </div>
         </div>
         <h3>상품리뷰작성</h3>
@@ -354,12 +393,12 @@ export default function DetailComponent({ homeSnackUrl, clickSnacks }) {
 }
 
 //리뷰 창css
-const ReviewBigBox = styled.div`
+export const ReviewBigBox = styled.div`
   border-bottom: 1px solid lightgray;
   display: flex;
 `;
 
-const UserProfileImgBox = styled.div`
+export const UserProfileImgBox = styled.div`
   float: left;
   width: 40px;
   height: 40px;
@@ -367,12 +406,12 @@ const UserProfileImgBox = styled.div`
   border-radius: 50%;
   overflow: hidden;
 `;
-const ProfileImg = styled.img`
+export const ProfileImg = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
 `;
-const UserReviewName = styled.span`
+export const UserReviewName = styled.span`
   /* display: inline-block; */
   height: 16px;
   vertical-align: middle;
@@ -381,14 +420,14 @@ const UserReviewName = styled.span`
   color: #111;
   letter-spacing: 0;
 `;
-const Date = styled.div`
+export const Date = styled.div`
   /* display: inline-block; */
   vertical-align: top;
   padding-top: 3px;
   font-size: 12px;
   color: #555;
 `;
-const ProductName = styled.div`
+export const ProductName = styled.div`
   /* display: inline-block; */
   width: 100%;
   margin-top: 5px;
@@ -398,12 +437,12 @@ const ProductName = styled.div`
   text-overflow: ellipsis;
   white-space: nowrap;
 `;
-const ContentBox = styled.div`
+export const ContentBox = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
 `;
-const Content = styled.span`
+export const Content = styled.span`
   margin-left: 10px;
   text-align: center;
   font-size: 15px;
@@ -411,7 +450,7 @@ const Content = styled.span`
 //
 
 //등록버튼 //
-const ReviewClickBtn = styled.button`
+export const ReviewClickBtn = styled.button`
   padding: 20px;
   width: 300px;
   border-radius: 20px;
@@ -422,5 +461,12 @@ const ReviewClickBtn = styled.button`
   border-radius: 10px;
   font-weight: bold;
   background-color: #ff5880;
+  cursor: pointer;
+`;
+export const DeleteModifybtn = styled.button`
+  border: none;
+  width: 80px;
+  padding: 0px;
+  background-color: #ffffff;
   cursor: pointer;
 `;
