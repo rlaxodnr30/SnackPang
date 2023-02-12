@@ -22,13 +22,14 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { ThemeContext } from "../../context/ThemeContext";
 
-export default function Navbar({ userImage, setUserImage }) {
+export default function Navbar({ userImage, setUserImage, userNick }) {
   const [isLogin, setIsLogin] = useState(false);
   const [users, setUsers] = useState("");
   const navigate = useNavigate();
   const loginUser = auth.currentUser;
   const { isDark } = useContext(ThemeContext);
   console.log(isDark);
+  console.log("user", users);
 
   // auth.currentUser
   //------------
@@ -44,6 +45,7 @@ export default function Navbar({ userImage, setUserImage }) {
       // console.log(users);
       if (user) {
         setUserImage(auth.currentUser.photoURL);
+        // setUsers(userNick);
       }
     });
   }, []);
@@ -57,6 +59,9 @@ export default function Navbar({ userImage, setUserImage }) {
           <LeftNavLink to="/">
             <HomeLogo src={homeLogo} />
             {/* <Porduc>SnakPang</Porduc> */}
+          </LeftNavLink>
+          <LeftNavLink to="/admin">
+            {loginUser?.email === "admin@snackpang.com" ? "상품추가" : null}
           </LeftNavLink>
         </LeftNav>
 
@@ -76,6 +81,7 @@ export default function Navbar({ userImage, setUserImage }) {
           </ImgBox>
 
           {isLogin ? (
+            // <LogBtn>{users.displayName}</LogBtn>
             <LogBtn>{users.displayName}</LogBtn>
           ) : (
             <RightNavLink to="/signup">회원가입</RightNavLink>

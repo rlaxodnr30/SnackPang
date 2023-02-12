@@ -15,6 +15,8 @@ export default function Router() {
   const [clickSnacks, setClickSnacks] = useState([]);
   const [userNick, setUserNick] = useState("");
   const [userImage, setUserImage] = useState("");
+  const [users, setUsers] = useState("");
+  const [loading, setLoading] = useState(true);
   console.log("clickSnack", clickSnacks);
   return (
     <BrowserRouter>
@@ -27,7 +29,12 @@ export default function Router() {
         <Route
           path="/"
           element={
-            <Home setClickSnacks={setClickSnacks} clickSnacks={clickSnacks} />
+            <Home
+              setClickSnacks={setClickSnacks}
+              clickSnacks={clickSnacks}
+              loading={loading}
+              setLoading={setLoading}
+            />
           }
         />
         <Route path="/signup" element={<SignUp />} />
@@ -49,7 +56,7 @@ export default function Router() {
           path="/detail/:id"
           element={<DetailPage clickSnacks={clickSnacks} />}
         />
-        <Route path="/Admin" element={<AdminComponent />} />
+        <Route path="/admin" element={<AdminComponent />} />
       </Routes>
       <Footer />
     </BrowserRouter>

@@ -21,14 +21,21 @@ import { db } from "../../firebase";
 import { collection, getDocs } from "firebase/firestore";
 import DetailComponent from "../Detail/DetailComponent.jsx";
 import { ThemeContext } from "../../context/ThemeContext";
+import Loding from "../Loding/Loding";
 
-export default function Home({ clickSnacks, setClickSnacks }) {
+export default function Home({
+  clickSnacks,
+  setClickSnacks,
+  loading,
+  setLoading,
+}) {
   const { isDark } = useContext(ThemeContext);
   const [showButton, setShowButton] = useState(false);
   const [snacks, setSnacks] = useState([]);
   // console.log("snacks :", snacks);
   const snckcollectionRef = collection(db, "product");
   const navigate = useNavigate();
+  console.log(loading);
 
   const scrollTop = () => {
     window.scroll({
@@ -53,6 +60,7 @@ export default function Home({ clickSnacks, setClickSnacks }) {
 
   // 홈페이지에 있을때만 실행되는 것.
   useEffect(() => {
+    setLoading(true);
     const getData = async () => {
       const data = await getDocs(snckcollectionRef);
       // console.log("data: ", data);
@@ -79,56 +87,60 @@ export default function Home({ clickSnacks, setClickSnacks }) {
       );
     };
     getData();
+    setLoading(false);
   }, []);
   return (
-    <div
-      style={{
-        backgroundColor: isDark ? "black" : "#d5d5d3",
-        color: isDark ? "white" : "black",
-      }}
-    >
-      <video
-        style={{ width: "100%" }}
-        src={snackMain}
-        muted
-        autoPlay
-        loop
-      ></video>
-      <HomeImg
+    <div>
+      {loading ? <Loding /> : null}
+      <div
         style={{
-          backgroundImage: "url(/backImg.jpg)",
+          backgroundColor: isDark ? "black" : "#d5d5d3",
+          color: isDark ? "white" : "black",
         }}
-      ></HomeImg>
+      >
+        <video
+          style={{ width: "100%" }}
+          src={snackMain}
+          muted
+          autoPlay
+          loop
+        ></video>
+        <HomeImg
+          style={{
+            backgroundImage: "url(/backImg.jpg)",
+          }}
+        ></HomeImg>
 
-      <ProducImgBox>
-        {snacks.map((r) => {
-          return (
-            <SnackCard key={r.id} id={r.id}>
-              <ProducImg
-                onClick={(e) => {
-                  navigate(`/detail/${r.id}`);
-                  if (r.image === e.target.src) {
-                    return setClickSnacks({
-                      id: r.id,
-                      name: r.name,
-                      image: r.image,
-                      price: r.price,
-                    });
-                  }
-                  console.log("stateSnack :", clickSnacks);
-                  // setHomeSnackUrl(e.target.src);
-                }}
-                src={r.image}
-              />
-              <SnackName>상품명:{r.name}</SnackName>
-              <SnackPrice>판매가:{r.price}원</SnackPrice>
-            </SnackCard>
-          );
-        })}
-        {showButton && (
-          <StMoveTopButton onClick={scrollTop}>︿</StMoveTopButton>
-        )}
-      </ProducImgBox>
+        <ProducImgBox>
+          {snacks.map((r) => {
+            return (
+              <SnackCard key={r.id} id={r.id}>
+                <ProducImg
+                  onClick={(e) => {
+                    navigate(`/detail/${r.id}`);
+                    if (r.image === e.target.src) {
+                      return setClickSnacks({
+                        id: r.id,
+                        name: r.name,
+                        image: r.image,
+                        price: r.price,
+                      });
+                    }
+                    console.log("stateSnack :", clickSnacks);
+                    // setHomeSnackUrl(e.target.src);
+                  }}
+                  src={r.image}
+                />
+                <SnackName>상품명:{r.name}</SnackName>
+                <SnackPrice>판매가:{r.price}원</SnackPrice>
+              </SnackCard>
+            );
+          })}
+          {showButton && (
+            <StMoveTopButton onClick={scrollTop}>︿</StMoveTopButton>
+          )}
+        </ProducImgBox>
+      </div>
     </div>
   );
 }
