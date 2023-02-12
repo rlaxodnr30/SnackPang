@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-
+import styled from "styled-components";
 import ShoppingText1 from "../../images/ShoppingText.png";
 import {
   ShoppingImgBox,
@@ -8,9 +8,18 @@ import {
   Thead,
   Tbody,
   CartBox,
+  BuyButton,
 } from "./CartPageComponent";
 import { db, auth } from "../../firebase";
-import { collection, doc, getDocs, query, where } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
 import { ThemeContext } from "../../context/ThemeContext";
 
 export default function CartPageComponent() {
@@ -19,23 +28,57 @@ export default function CartPageComponent() {
   console.log("usercart:", userCartProduct);
   const loginUser = auth.currentUser;
   console.log(loginUser);
+
+  // let sum = userCartProduct.total.reduce((acc, cur,i) => {
+  //   return acc[i] + cur[i];
+  // }, 0);
+
+  // let sum = [0, 1, 2, 3].reduce(function (accumulator, currentValue) {
+  //   return accumulator + currentValue;
+  // }, 0);
+
+  const total = userCartProduct.map((item) => {
+    return item.totalPrice;
+  });
+  const totalCount = userCartProduct.map((item) => {
+    return item.count.count;
+  });
+
+  console.log(total);
   useEffect(() => {
     const cartProduct = async () => {
-      const cartData = await getDocs(collection(db, "cartProduct"));
-
-      setUserCartProduct(
-        cartData.docs.map((doc) => ({
+      const q = query(collection(db, "cartProduct"));
+      const cartSnap = onSnapshot(q, (querySnapshot) => {
+        const cartList = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           name: doc.data().name,
           price: doc.data().price,
           count: doc.data().count,
           userId: doc.data().userId,
-        }))
-      );
+          totalPrice: Number(doc.data().price) * doc.data().count.count,
+        }));
+        setUserCartProduct(cartList);
+      });
+      return cartSnap;
+      // const cartData = await getDocs(collection(db, "cartProduct"));
+      // setUserCartProduct(
+      //   cartData.docs.map((doc) => ({
+      //     id: doc.id,
+      //     name: doc.data().name,
+      //     price: doc.data().price,
+      //     count: doc.data().count,
+      //     userId: doc.data().userId,
+      //     totalPrice: Number(doc.data().price) * doc.data().count.count,
+      //   }))
+      // );
     };
     cartProduct();
   }, []);
-  // console.log(loginUser.uid);
+  console.log("total!", userCartProduct);
+
+  const handleCartDelete = async (id) => {
+    await deleteDoc(doc(db, "cartProduct", id));
+  };
   return (
     <>
       <CartBox
@@ -70,19 +113,44 @@ export default function CartPageComponent() {
                       <td>{item.name}</td>
                       <td>{item.count.count}</td>
                       <td>{item.price * item.count.count}원</td>
+                      <td>
+                        <button
+                          onClick={() => {
+                            handleCartDelete(item.id);
+                            alert("삭제완료");
+                          }}
+                        >
+                          삭제
+                        </button>
+                      </td>
                     </tr>
                   );
                 }
               })}
-              {/* <tr>
-                <td>1</td>
-                <td>스윙칩</td>
-                <td>이미지</td>
-                <td>2</td>
-                <td>1,300</td>
-              </tr> */}
             </Tbody>
+            <tfoot style={{ backgroundColor: "#14FF8A" }}>
+              <tr>
+                <th>최종</th>
+                <th>총 수량:</th>
+                <th>
+                  {totalCount.reduce((acc, cur) => {
+                    return acc + cur;
+                  }, 0)}{" "}
+                  개
+                </th>
+                <th>주문합계:</th>
+                <th>
+                  {total.reduce((acc, cur) => {
+                    return acc + cur;
+                  }, 0)}{" "}
+                  원
+                </th>
+              </tr>
+            </tfoot>
           </Table>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <BuyButton>구매하기</BuyButton>
+          </div>
         </CartList>
       </CartBox>
     </>

@@ -24,6 +24,7 @@ import {
   doc,
   getDocs,
   onSnapshot,
+  orderBy,
   query,
   updateDoc,
 } from "firebase/firestore";
@@ -35,10 +36,9 @@ export default function DetailComponent({ homeSnackUrl, clickSnacks }) {
   const [count, setCount] = useState(1);
   const [reviewContent, setReviewContent] = useState("");
   const [reviewList, setReviewList] = useState([]);
-
   // const [reviewCount, setReviewCount] = useState(reviewCount)  리뷰개수
   const navigate = useNavigate();
-
+  // console.log("날씨", Date);
   const [snack, setSnack] = useState({});
   const [snacks, setSnacks] = useState([]);
   const snckcollectionRef = collection(db, "product");
@@ -147,7 +147,7 @@ export default function DetailComponent({ homeSnackUrl, clickSnacks }) {
       content: reviewContent,
       userId: loginUser.uid,
       userImage: loginUser.photoURL,
-      // date: new Date(),
+      // createdAt: Date.now(),
       displayName: loginUser.displayName,
       snackName: clickSnacks.name,
       imageUrl: clickSnacks.image,

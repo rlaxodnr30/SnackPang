@@ -17,3 +17,10 @@ export const Tbody = styled.tbody`
 export const CartBox = styled.div`
   height: 100vh;
 `;
+export const BuyButton = styled.button`
+  padding: 20px 80px;
+  background-color: #14ff8a;
+  border: none;
+  margin-top: 10px;
+  cursor: pointer;
+`;

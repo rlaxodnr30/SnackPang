@@ -30,13 +30,9 @@ export default function MypageComponent({
   const nickNameRef = useRef("");
   // console.log(auth.currentUser);
   const loginUser = auth.currentUser;
-
+  console.log(userNick);
   console.log("loginuser :", loginUser);
   // console.log(nickNameRef);
-
-  useEffect(() => {
-    console.log(auth);
-  }, []);
 
   const saveImgFile = async () => {
     const file = imgRef.current.files[0];
@@ -68,7 +64,8 @@ export default function MypageComponent({
     updateProfile(auth.currentUser, {
       displayName: nickNameRef.current.value,
     });
-
+    // setUserNick(displayName);
+    // setUserNick(nickNameRef.current.value); // 닉네임 스테이트로 관리함  추가
     alert("닉네임이 변경되었습니다!");
   };
   console.log("dd :", auth.currentUser);
@@ -103,6 +100,7 @@ export default function MypageComponent({
             <ChangeImgBtn onClick={saveImgFile}>이미지 변경 저장</ChangeImgBtn>
             <h3>MY PROFILE</h3>
             <p>{loginUser?.displayName}</p>
+            {/* <p>{userNick}</p>   state 로 추가함 */}
             <div>
               <ProfileName
                 ref={nickNameRef}
