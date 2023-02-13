@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
+import { BsTrash } from "react-icons/bs";
+
 import ShoppingText1 from "../../images/ShoppingText.png";
 import {
   ShoppingImgBox,
@@ -28,7 +30,8 @@ export default function CartPageComponent() {
   console.log("usercart:", userCartProduct);
   const loginUser = auth.currentUser;
   console.log(loginUser);
-
+  console.log(userCartProduct.userId);
+  console.log(loginUser.uid);
   // let sum = userCartProduct.total.reduce((acc, cur,i) => {
   //   return acc[i] + cur[i];
   // }, 0);
@@ -114,14 +117,14 @@ export default function CartPageComponent() {
                       <td>{item.count.count}</td>
                       <td>{item.price * item.count.count}원</td>
                       <td>
-                        <button
+                        <DeleteBtn
                           onClick={() => {
                             handleCartDelete(item.id);
                             alert("삭제완료");
                           }}
                         >
-                          삭제
-                        </button>
+                          <BsTrash />
+                        </DeleteBtn>
                       </td>
                     </tr>
                   );
@@ -133,16 +136,17 @@ export default function CartPageComponent() {
                 <th>최종</th>
                 <th>총 수량:</th>
                 <th>
-                  {totalCount.reduce((acc, cur) => {
+                  {totalCount.reduce((acc, cur, i) => {
                     return acc + cur;
                   }, 0)}{" "}
                   개
                 </th>
                 <th>주문합계:</th>
                 <th>
-                  {total.reduce((acc, cur) => {
+                  {total.reduce((acc, cur, i) => {
+                    // if (userCartProduct[i].userId === loginUser.uid)
                     return acc + cur;
-                  }, 0)}{" "}
+                  }, 0)}
                   원
                 </th>
               </tr>
@@ -156,3 +160,9 @@ export default function CartPageComponent() {
     </>
   );
 }
+
+export const DeleteBtn = styled.button`
+  border: none;
+  background-color: white;
+  cursor: pointer;
+`;

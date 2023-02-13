@@ -1,8 +1,32 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import Swing from "../../images/swingChip.jpg";
-import Sun from "../../images/sunchip.png";
-import Dodo from "../../images/Nacho.jpg";
-import Banner from "../../images/Banner.png";
+
+export default function ProductHome({ r, clickSnacks, setClickSnacks, key }) {
+  const navigate = useNavigate();
+  return (
+    <SnackCard key={r.id} id={r.id}>
+      <ProducImg
+        onClick={(e) => {
+          navigate(`/detail/${r.id}`);
+          if (r.image === e.target.src) {
+            return setClickSnacks({
+              id: r.id,
+              name: r.name,
+              image: r.image,
+              price: r.price,
+            });
+          }
+          console.log("stateSnack :", clickSnacks);
+          // setHomeSnackUrl(e.target.src);
+        }}
+        src={r.image}
+      />
+      <SnackName>상품명:{r.name}</SnackName>
+      <SnackPrice>판매가:{r.price}원</SnackPrice>
+    </SnackCard>
+  );
+}
 
 export const MainWrap = styled.div`
   display: flex;
