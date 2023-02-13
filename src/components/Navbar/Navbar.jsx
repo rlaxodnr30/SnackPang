@@ -11,7 +11,7 @@ import {
   RightNavLink,
   LogiBtn,
 } from "./Navbar";
-import homeLogo from "../../images/image 2.png";
+import homeLogo from "../../images/SnackPangLogo.png";
 import blankProfiles from "../../images/blankProfiles.png";
 import cart from "../../images/shopping.png";
 import { auth, db } from "../../firebase";

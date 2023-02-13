@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { BsSearch } from "react-icons/bs";
 import {
   MainWrap,
   Carousel,
@@ -22,6 +23,7 @@ import { collection, getDocs } from "firebase/firestore";
 import DetailComponent from "../Detail/DetailComponent.jsx";
 import { ThemeContext } from "../../context/ThemeContext";
 import Loding from "../Loding/Loding";
+import ProductHome from "./ProductHome";
 
 export default function Home({
   clickSnacks,
@@ -31,19 +33,27 @@ export default function Home({
 }) {
   const { isDark } = useContext(ThemeContext);
   const [showButton, setShowButton] = useState(false);
+  const [inputVal, setInutVal] = useState("");
   const [snacks, setSnacks] = useState([]);
   // console.log("snacks :", snacks);
+
   const snckcollectionRef = collection(db, "product");
   const navigate = useNavigate();
-  console.log(loading);
 
+  const handleChange = (e) => {
+    setInutVal(e.target.value);
+  };
+  // 과자 검색 기능 필터
+  const searched = snacks.filter((item) => item.name.includes(inputVal));
+
+  //스크롤 최상단으로 이동 스크롤
   const scrollTop = () => {
     window.scroll({
       top: 0,
       behavior: "smooth",
     });
   };
-
+  //스크롤 y값이 800보다 크면 생성
   useEffect(() => {
     const showButtonClick = () => {
       if (window.scrollY > 800) {
@@ -109,37 +119,81 @@ export default function Home({
           style={{
             backgroundImage: "url(/backImg.jpg)",
           }}
-        ></HomeImg>
-
-        <ProducImgBox>
-          {snacks.map((r) => {
+        >
+          <HomeTextBox>
+            <span style={{ fontSize: "24px", color: "beige" }}>
+              평일 오후 4시까지 주문/결제된 건에 대하여 당일 배송!!
+            </span>
+            <br></br>
+            <div style={{ marginTop: "60px" }}>
+              <span style={{ fontSize: "20px" }}>
+                발송량이 많아 오후 4시 이후 주문 건은 당일발송이 어려운 점 양해
+                바랍니다. (단, 재고 및 주문폭주에 따라 발송이 지연될 수 있으며,
+                이 경우 결제하신 순서대로 발송됩니다.) 발송 후 평균 1일 이내
+                수령 가능하며, 송장번호로 위치추적이 가능합니다. 택배사의
+                사정(제주도 및 도서산간지역 포함)에 따라 다소 지연될 수
+                있습니다. 묶음배송의 경우 상품 별 출고지에 따라 묶음배송이
+                불가하거나 별도로 발송될 수 있으며, 1~2일 발송이 지연될 수도
+                있습니다. 서울/경기 지역의 경우 퀵발송이 가능(착불)하며,
+                필요하신 경우 고객만족센터로 문의주세요.
+              </span>
+            </div>
+          </HomeTextBox>
+        </HomeImg>
+        <SearchInputBox>
+          <SearchInput
+            placeholder="찾으시는 과자를 검색해주세요!"
+            onChange={handleChange}
+          />
+          <BsSearch style={{ marginLeft: "10px" }} />
+        </SearchInputBox>
+        <ProducImgBox style={{ marginTop: "30px" }}>
+          {searched.map((r) => {
             return (
-              <SnackCard key={r.id} id={r.id}>
-                <ProducImg
-                  onClick={(e) => {
-                    navigate(`/detail/${r.id}`);
-                    if (r.image === e.target.src) {
-                      return setClickSnacks({
-                        id: r.id,
-                        name: r.name,
-                        image: r.image,
-                        price: r.price,
-                      });
-                    }
-                    console.log("stateSnack :", clickSnacks);
-                    // setHomeSnackUrl(e.target.src);
-                  }}
-                  src={r.image}
-                />
-                <SnackName>상품명:{r.name}</SnackName>
-                <SnackPrice>판매가:{r.price}원</SnackPrice>
-              </SnackCard>
+              <ProductHome
+                r={r}
+                setClickSnacks={setClickSnacks}
+                clickSnacks={clickSnacks}
+                key={r.id}
+              />
             );
           })}
-          {showButton && (
-            <StMoveTopButton onClick={scrollTop}>︿</StMoveTopButton>
-          )}
         </ProducImgBox>
+        <ProducImgBox style={{ marginTop: "30px" }}>
+          {snacks.map((r) => {
+            return (
+              <ProductHome
+                r={r}
+                setClickSnacks={setClickSnacks}
+                clickSnacks={clickSnacks}
+                key={r.id}
+              />
+              // <SnackCard key={r.id} id={r.id}>
+              //   <ProducImg
+              //     onClick={(e) => {
+              //       navigate(`/detail/${r.id}`);
+              //       if (r.image === e.target.src) {
+              //         return setClickSnacks({
+              //           id: r.id,
+              //           name: r.name,
+              //           image: r.image,
+              //           price: r.price,
+              //         });
+              //       }
+              //       console.log("stateSnack :", clickSnacks);
+              //       // setHomeSnackUrl(e.target.src);
+              //     }}
+              //     src={r.image}
+              //   />
+              //   <SnackName>상품명:{r.name}</SnackName>
+              //   <SnackPrice>판매가:{r.price}원</SnackPrice>
+              // </SnackCard>
+            );
+          })}
+        </ProducImgBox>
+        {showButton && (
+          <StMoveTopButton onClick={scrollTop}>︿</StMoveTopButton>
+        )}
       </div>
     </div>
   );
@@ -171,4 +225,39 @@ const StMoveTopButton = styled.div`
   @media screen and (max-width: 800px) {
     display: none;
   }
+`;
+export const HomeTextBox = styled.div`
+  margin-left: 40px;
+  font-weight: bold;
+  width: 400px;
+  height: 100%;
+  padding-top: 50px;
+  text-align: center;
+  color: white;
+`;
+export const SearchInput = styled.input`
+  border: none;
+  width: 30%;
+  height: 30px;
+  border-radius: 15px;
+  font-size: 16px;
+  margin-left: 5px;
+  &::placeholder {
+    color: #93938c;
+  }
+  &:hover {
+    background-color: beige;
+  }
+
+  &:focus {
+    color: #363636;
+    border: 1px solid gray;
+    outline: none;
+  }
+`;
+export const SearchInputBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
 `;
