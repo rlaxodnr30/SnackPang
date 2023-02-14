@@ -59,7 +59,7 @@ export default function DetailReview({ item, i, reviewList, id }) {
       {loginUser?.uid === item.userId ? (
         <DeleteModifybtn
           onClick={() => {
-            if (loginUser.uid === item.userId) {
+            if (loginUser?.uid === item.userId) {
               handledelete(item.id, i);
               alert("리뷰가 삭제 되었습니다!");
             }
@@ -69,7 +69,7 @@ export default function DetailReview({ item, i, reviewList, id }) {
         </DeleteModifybtn>
       ) : null}
 
-      {loginUser.uid === item.userId ? (
+      {loginUser?.uid === item.userId ? (
         <DeleteModifybtn
           onClick={() => {
             modifyBtn(item.id, i);

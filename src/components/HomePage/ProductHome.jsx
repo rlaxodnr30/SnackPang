@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { HiOutlineShoppingCart } from "react-icons/hi";
+import ModalProduct from "./ModalProduct";
+import { auth } from "../../firebase";
 
 export default function ProductHome({ r, clickSnacks, setClickSnacks, key }) {
   const navigate = useNavigate();
+  const loginUser = auth.currentUser;
+  const [modal, setModal] = useState(false);
   return (
     <SnackCard key={r.id} id={r.id}>
       <ProducImg
@@ -25,7 +29,16 @@ export default function ProductHome({ r, clickSnacks, setClickSnacks, key }) {
       />
       <SnackName>상품명:{r.name}</SnackName>
       <SnackPrice>판매가:{r.price}원</SnackPrice>
-      <CartButton>
+      <CartButton
+        onClick={() => {
+          if (loginUser) {
+            setModal(!modal);
+          } else {
+            alert("로그인이 필요합니다!");
+            navigate("/signin");
+          }
+        }}
+      >
         <HiOutlineShoppingCart
           style={{
             display: "block",
@@ -35,6 +48,7 @@ export default function ProductHome({ r, clickSnacks, setClickSnacks, key }) {
           }}
         />
       </CartButton>
+      {modal ? <ModalProduct setModal={setModal} modal={modal} /> : null}
     </SnackCard>
   );
 }
