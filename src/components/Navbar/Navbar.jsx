@@ -10,6 +10,7 @@ import {
   Porduc,
   RightNavLink,
   LogiBtn,
+  CartCount,
 } from "./Navbar";
 import homeLogo from "../../images/SnackPangLogo.png";
 import blankProfiles from "../../images/blankProfiles.png";
@@ -22,7 +23,12 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { ThemeContext } from "../../context/ThemeContext";
 
-export default function Navbar({ userImage, setUserImage, userNick }) {
+export default function Navbar({
+  userImage,
+  setUserImage,
+  userNick,
+  cartCount,
+}) {
   const [isLogin, setIsLogin] = useState(false);
   const [users, setUsers] = useState("");
   const navigate = useNavigate();
@@ -68,6 +74,8 @@ export default function Navbar({ userImage, setUserImage, userNick }) {
         <RightNav>
           <RightNavLink to={isLogin ? "/cartpage" : "/signin"}>
             <CartImg src={cart} />
+            {loginUser ? <CartCount>{cartCount}</CartCount> : null}
+            {/* <CartCount>{cartCount}</CartCount> */}
           </RightNavLink>
           <RightNavLink to={isLogin ? "/mypage" : "/signin"}>
             <Porduc>마이페이지</Porduc>

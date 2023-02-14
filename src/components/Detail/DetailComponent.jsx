@@ -127,22 +127,15 @@ export default function DetailComponent({ homeSnackUrl, clickSnacks }) {
         });
         alert("장바구니에 담겼습니다!");
       }
-
-      // console.log("id : ", doc.id);
-      // console.log("name : ", doc.data().name);
-      // console.log("price : ", doc.data().price);
-      // console.log("count : ", doc.data().count);
-      // console.log("userId : ", doc.data().userId);
     }
   };
   const addReivew = async () => {
+    //로그인 유저가 아니면 리뷰작성 x alert 창이 뜸
     if (!loginUser) {
       alert("로그인이 필요합니다.");
       return;
     }
-
     // 저 userId로 firebase에서 찾아서 가져오는 거
-    //
     const goReview = await addDoc(collection(db, "userReview"), {
       content: reviewContent,
       userId: loginUser.uid,
@@ -382,10 +375,18 @@ export default function DetailComponent({ homeSnackUrl, clickSnacks }) {
             onChange={(e) => {
               setReviewContent(e.target.value);
             }}
+            value={reviewContent}
           />
         </div>
         <div>
-          <ReviewClickBtn onClick={addReivew}>등록</ReviewClickBtn>
+          <ReviewClickBtn
+            onClick={() => {
+              addReivew();
+              setReviewContent("");
+            }}
+          >
+            등록
+          </ReviewClickBtn>
         </div>
       </div>
     </MainWrap>

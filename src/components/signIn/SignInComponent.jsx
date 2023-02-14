@@ -26,17 +26,51 @@ export default function SignInComponent() {
   const navigate = useNavigate();
   const idRef = useRef(null);
   const pwRef = useRef(null);
+  const loginUser = auth.currentUser;
+  console.log("user", loginUser);
+
   //로그인
   const singIN = async () => {
-    const login = await signInWithEmailAndPassword(
-      auth,
-      idRef.current.value,
-      pwRef.current.value
+    //이메일 정규식
+    const emailReg = new RegExp(
+      "^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$"
     );
-    alert("로그인 성공");
-    console.log(login);
-    navigate("/");
+    //패스워드 정규식
+    const passwordReg = /^[A-Za-z0-9]{8,20}$/;
+
+    const inputId = idRef.current.value;
+    const inputPw = pwRef.current.value;
+
+    if (emailReg.test(inputId) === false) {
+      alert("이메일을 확인해주세요!");
+      return;
+    }
+    if (passwordReg.test(inputPw) === false) {
+      alert("패스워드를 확인해주세요");
+      return;
+    }
+    try {
+      const login = await signInWithEmailAndPassword(
+        auth,
+        idRef.current.value,
+        pwRef.current.value
+      );
+      alert("로그인 성공");
+      console.log(login);
+      navigate("/");
+    } catch {
+      alert("로그인 실패");
+    }
   };
+  //   const login = await signInWithEmailAndPassword(
+  //     auth,
+  //     idRef.current.value,
+  //     pwRef.current.value
+  //   );
+  //   alert("로그인 성공");
+  //   console.log(login);
+  //   navigate("/");
+  // };
   //구글로그인
   const googlelogin = async () => {
     try {
@@ -55,6 +89,7 @@ export default function SignInComponent() {
       console.log(error);
     }
   };
+
   return (
     <>
       <SignUpBox
@@ -86,6 +121,7 @@ export default function SignInComponent() {
               />
             </InputempwBox>
           </div>
+
           <ButtonBox>
             <ButtonSign onClick={singIN} type="submit">
               로그인
@@ -103,6 +139,16 @@ export default function SignInComponent() {
               구글 로그인
             </ButtonSocial>
           </SocialBtnBox>
+          <ButtonBox>
+            <ButtonSign
+              onClick={() => {
+                navigate("/signup");
+              }}
+              type="button"
+            >
+              회원가입
+            </ButtonSign>
+          </ButtonBox>
         </SignInput>
       </SignUpBox>
     </>

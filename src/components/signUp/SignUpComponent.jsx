@@ -45,12 +45,9 @@ export default function SignUpComponent() {
       "^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$"
     );
     /* 패스워드 정규식 */
-    const passwordReg = new RegExp("");
+    const passwordReg = /^[A-Za-z0-9]{8,20}$/;
     /* 닉네임 정규식 */
     const nameReg = new RegExp("^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,8}$");
-    /* 특수문자, 영어 조합의 비밀번호 */
-    /* 주민번호, 핸드폰번호 */
-    /* 한글로만 이루어진 아이디, 한글+영문조합의 아이디 */
 
     const inputEmail = idRef.current.value;
     const inputPassword = pwRef.current.value;
@@ -62,7 +59,7 @@ export default function SignUpComponent() {
     }
 
     if (passwordReg.test(inputPassword) === false) {
-      alert("제대로 된 패스워드를 입력하세요");
+      alert("비밀번호 형식을 확인해주세요");
       return;
     }
 
@@ -135,6 +132,9 @@ export default function SignUpComponent() {
                 type="password"
                 placeholder="비밀번호를 입력해주세요."
               />
+              <Text>
+                *비밀번호는 영문 대소문자, 숫자를 혼합하여 8~20자로 입력해주세요
+              </Text>
             </InputempwBox>
           </div>
           <ButtonBox>
@@ -159,3 +159,8 @@ export default function SignUpComponent() {
     </>
   );
 }
+export const Text = styled.div`
+  margin-top: 4px;
+  font-size: 10px;
+  color: gray;
+`;

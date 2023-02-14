@@ -14,6 +14,7 @@ import {
 } from "./CartPageComponent";
 import { db, auth } from "../../firebase";
 import {
+  addDoc,
   collection,
   deleteDoc,
   doc,
@@ -30,7 +31,7 @@ export default function CartPageComponent() {
   console.log("usercart:", userCartProduct);
   const loginUser = auth.currentUser;
   console.log(loginUser);
-  console.log(userCartProduct.userId);
+  // console.log(userCart);
   console.log(loginUser.uid);
   // let sum = userCartProduct.total.reduce((acc, cur,i) => {
   //   return acc[i] + cur[i];
@@ -39,15 +40,20 @@ export default function CartPageComponent() {
   // let sum = [0, 1, 2, 3].reduce(function (accumulator, currentValue) {
   //   return accumulator + currentValue;
   // }, 0);
-
-  const total = userCartProduct.map((item) => {
+  //로그인 유저의 카트정보
+  const userCart = userCartProduct.filter(
+    (item) => item.userId === loginUser.uid
+  );
+  //로그인유저의 전체 과자의 가격
+  const total = userCart.map((item) => {
     return item.totalPrice;
   });
-  const totalCount = userCartProduct.map((item) => {
+  //로그인 유저의 전체 과자의 개수
+  const totalCount = userCart.map((item) => {
     return item.count.count;
   });
 
-  console.log(total);
+  console.log("userCart:", totalCount);
   useEffect(() => {
     const cartProduct = async () => {
       const q = query(collection(db, "cartProduct"));
@@ -138,7 +144,7 @@ export default function CartPageComponent() {
                 <th>
                   {totalCount.reduce((acc, cur, i) => {
                     return acc + cur;
-                  }, 0)}{" "}
+                  }, 0)}
                   개
                 </th>
                 <th>주문합계:</th>

@@ -17,10 +17,11 @@ export default function DetailReview({ item, i, reviewList, id }) {
   const [editBox, setEditBox] = useState(false);
   const [editVal, setEditVal] = useState("");
   const loginUser = auth.currentUser;
-
+  //삭제버튼 함수
   const handledelete = async (id, i) => {
     await deleteDoc(doc(db, "userReview", id));
   };
+  //수정버튼 함수
   const modifyBtn = async (id, i) => {
     const modifyRef = doc(db, "userReview", id);
     await updateDoc(modifyRef, {
