@@ -10,6 +10,7 @@ import Product from "../pages/Product";
 import SignIn from "../pages/SignIn";
 import SignUp from "../pages/SignUp";
 import Footer from "../components/Footer/Footer.jsx";
+import NotFound from "../components/NotFound/NotFound.jsx";
 export default function Router() {
   // const [userImg, setUserImg] = useState("");
   const [clickSnacks, setClickSnacks] = useState([]);
@@ -17,6 +18,7 @@ export default function Router() {
   const [userImage, setUserImage] = useState("");
   const [users, setUsers] = useState("");
   const [loading, setLoading] = useState(true);
+  const [cartCount, setCartCount] = useState(0);
   console.log("clickSnack", clickSnacks);
   return (
     <BrowserRouter>
@@ -24,6 +26,7 @@ export default function Router() {
         setUserImage={setUserImage}
         userImage={userImage}
         userNick={userNick}
+        cartCount={cartCount}
       />
       <Routes>
         <Route
@@ -51,12 +54,16 @@ export default function Router() {
           }
         />
         <Route path="/product" element={<Product />} />
-        <Route path="/cartpage" element={<CartPage />} />
+        <Route
+          path="/cartpage"
+          element={<CartPage setCartCount={setCartCount} />}
+        />
         <Route
           path="/detail/:id"
           element={<DetailPage clickSnacks={clickSnacks} />}
         />
         <Route path="/admin" element={<AdminComponent />} />
+        <Route path="/*" element={<NotFound />} />
       </Routes>
       <Footer />
     </BrowserRouter>

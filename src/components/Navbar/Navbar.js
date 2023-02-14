@@ -25,6 +25,7 @@ export const LeftNavLink = styled(NavLink)`
 `;
 
 export const RightNav = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
 `;
@@ -72,4 +73,18 @@ export const LogiBtn = styled.button`
   padding-top: 3px;
   font-size: 15px;
   cursor: pointer;
+`;
+export const CartCount = styled.div`
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  background-color: red;
+  color: white;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: -8px;
+  left: 21px;
 `;
