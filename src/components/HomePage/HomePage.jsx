@@ -222,6 +222,9 @@ const StMoveTopButton = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  &:hover {
+    color: black;
+  }
   @media screen and (max-width: 800px) {
     display: none;
   }
