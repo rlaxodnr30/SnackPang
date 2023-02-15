@@ -32,13 +32,19 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import styled from "styled-components";
 import DetailReview from "./DetailReview";
-export default function DetailComponent({ homeSnackUrl, clickSnacks }) {
+export default function DetailComponent({
+  homeSnackUrl,
+  clickSnacks,
+  setCartCount,
+}) {
   const [count, setCount] = useState(1);
   const [reviewContent, setReviewContent] = useState("");
   const [reviewList, setReviewList] = useState([]);
   // const [reviewCount, setReviewCount] = useState(reviewCount)  리뷰개수
   const navigate = useNavigate();
-  // console.log("날씨", Date);
+  // const dates = new Date();
+  // const d1 = new Date().getDate();
+  // console.log(d1);
   const [snack, setSnack] = useState({});
   const [snacks, setSnacks] = useState([]);
   const snckcollectionRef = collection(db, "product");
@@ -47,6 +53,7 @@ export default function DetailComponent({ homeSnackUrl, clickSnacks }) {
   const loginUser = auth.currentUser;
   console.log("click:", clickSnacks);
   console.log("revList:", reviewList);
+  console.log("login", loginUser);
 
   // const date = new Date();
   // console.log(date);
@@ -67,7 +74,7 @@ export default function DetailComponent({ homeSnackUrl, clickSnacks }) {
 
     getData();
 
-    // 리스트에서 현재 페이지에 있는 과자의 정보만 빼야되잖아.
+    // 리스트에서 현재 페이지에 있는 과자의 정보만 빼야함
     // snack.filter(item => item.name === 현재페이지과자이름)
     // localhost:3000/detail/과자아이디
   }, []);
@@ -100,7 +107,10 @@ export default function DetailComponent({ homeSnackUrl, clickSnacks }) {
 
       // // // 반복문이랑 똑같음.
       cartData.docs.forEach((doc) => {
-        if (clickSnacks.name === doc.data().name) {
+        if (
+          clickSnacks.name === doc.data().name &&
+          auth.currentUser.uid === doc.data().userId
+        ) {
           console.log(clickSnacks.name, doc.data().name);
           incartProduct = true;
           incartProductId = doc.id;
@@ -128,7 +138,9 @@ export default function DetailComponent({ homeSnackUrl, clickSnacks }) {
         alert("장바구니에 담겼습니다!");
       }
     }
+    setCartCount((prev) => prev + count);
   };
+
   const addReivew = async () => {
     //로그인 유저가 아니면 리뷰작성 x alert 창이 뜸
     if (!loginUser) {
@@ -140,7 +152,9 @@ export default function DetailComponent({ homeSnackUrl, clickSnacks }) {
       content: reviewContent,
       userId: loginUser.uid,
       userImage: loginUser.photoURL,
-      // createdAt: Date.now(),
+      datenow: `${new window.Date().getFullYear()}-${
+        new window.Date().getMonth() + 1
+      }-${new window.Date().getDate()} `,
       displayName: loginUser.displayName,
       snackName: clickSnacks.name,
       imageUrl: clickSnacks.image,
@@ -351,6 +365,7 @@ export default function DetailComponent({ homeSnackUrl, clickSnacks }) {
               if (item.snackName === snack?.name) {
                 return (
                   <DetailReview
+                    key={item.id}
                     id={item.id}
                     reviewList={reviewList}
                     item={item}

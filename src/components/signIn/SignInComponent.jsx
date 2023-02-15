@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useState } from "react";
 import styled from "styled-components";
 import {
   InputTitle,
@@ -20,12 +20,14 @@ import googles from "../../images/googleicon.png";
 import github from "../../images/githubicon.png";
 import snckPang from "../../images/image 1.png";
 import { ThemeContext } from "../../context/ThemeContext";
+import Loading from "../Loading/Loading";
 
 export default function SignInComponent() {
   const { isDark } = useContext(ThemeContext);
   const navigate = useNavigate();
   const idRef = useRef(null);
   const pwRef = useRef(null);
+  const [loading, setLoading] = useState(false);
   const loginUser = auth.currentUser;
   console.log("user", loginUser);
 
@@ -50,15 +52,17 @@ export default function SignInComponent() {
       return;
     }
     try {
+      setLoading(true);
       const login = await signInWithEmailAndPassword(
         auth,
         idRef.current.value,
         pwRef.current.value
       );
       alert("로그인 성공");
-      console.log(login);
       navigate("/");
+      setLoading(false);
     } catch {
+      setLoading(false);
       alert("로그인 실패");
     }
   };
@@ -89,9 +93,10 @@ export default function SignInComponent() {
       console.log(error);
     }
   };
-
+  console.log(loading);
   return (
     <>
+      {loading === true ? <Loading /> : null}
       <SignUpBox
         style={{
           backgroundColor: isDark ? "black" : "white",

@@ -11,6 +11,7 @@ import SignIn from "../pages/SignIn";
 import SignUp from "../pages/SignUp";
 import Footer from "../components/Footer/Footer.jsx";
 import NotFound from "../components/NotFound/NotFound.jsx";
+import ModalProduct from "../components/HomePage/ModalProduct.jsx";
 export default function Router() {
   // const [userImg, setUserImg] = useState("");
   const [clickSnacks, setClickSnacks] = useState([]);
@@ -27,12 +28,14 @@ export default function Router() {
         userImage={userImage}
         userNick={userNick}
         cartCount={cartCount}
+        setCartCount={setCartCount}
       />
       <Routes>
         <Route
           path="/"
           element={
             <Home
+              setCartCount={setCartCount}
               setClickSnacks={setClickSnacks}
               clickSnacks={clickSnacks}
               loading={loading}
@@ -60,10 +63,16 @@ export default function Router() {
         />
         <Route
           path="/detail/:id"
-          element={<DetailPage clickSnacks={clickSnacks} />}
+          element={
+            <DetailPage clickSnacks={clickSnacks} setCartCount={setCartCount} />
+          }
         />
         <Route path="/admin" element={<AdminComponent />} />
         <Route path="/*" element={<NotFound />} />
+        <Route
+          path="/modal/:id"
+          element={<ModalProduct setCartCount={setCartCount} />}
+        />
       </Routes>
       <Footer />
     </BrowserRouter>

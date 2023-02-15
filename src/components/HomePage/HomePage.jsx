@@ -22,10 +22,11 @@ import { db } from "../../firebase";
 import { collection, getDocs } from "firebase/firestore";
 import DetailComponent from "../Detail/DetailComponent.jsx";
 import { ThemeContext } from "../../context/ThemeContext";
-import Loding from "../Loding/Loding";
+import Loading from "../Loading/Loading";
 import ProductHome from "./ProductHome";
 
 export default function Home({
+  setCartCount,
   clickSnacks,
   setClickSnacks,
   loading,
@@ -101,7 +102,7 @@ export default function Home({
   }, []);
   return (
     <div>
-      {loading ? <Loding /> : null}
+      {loading ? <Loading /> : null}
       <div
         style={{
           backgroundColor: isDark ? "black" : "#d5d5d3",
@@ -151,6 +152,7 @@ export default function Home({
           {searched.map((r) => {
             return (
               <ProductHome
+                setCartCount={setCartCount}
                 r={r}
                 setClickSnacks={setClickSnacks}
                 clickSnacks={clickSnacks}

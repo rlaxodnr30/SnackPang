@@ -29,7 +29,7 @@ export default function DetailReview({ item, i, reviewList, id }) {
     });
   };
   return (
-    <ReviewBigBox key={item.i}>
+    <ReviewBigBox>
       <div style={{ width: "150px" }}>
         <UserProfileImgBox>
           {/* <ProfileImg src={item?.userImage} /> */}
@@ -38,7 +38,7 @@ export default function DetailReview({ item, i, reviewList, id }) {
         <div>
           <UserReviewName>{item?.displayName}</UserReviewName>
         </div>
-        <Date>2023.02.09</Date>
+        <Date>{item?.datenow}</Date>
         <ProductName>{item.snackName}</ProductName>
       </div>
       <ContentBox>

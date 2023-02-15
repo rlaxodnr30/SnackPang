@@ -18,7 +18,7 @@ import cart from "../../images/shopping.png";
 import { auth, db } from "../../firebase";
 import { signOut } from "firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
-import { getDocs, collection } from "firebase/firestore";
+import { getDocs, collection, addDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { ThemeContext } from "../../context/ThemeContext";
@@ -28,16 +28,61 @@ export default function Navbar({
   setUserImage,
   userNick,
   cartCount,
+  setCartCount,
 }) {
   const [isLogin, setIsLogin] = useState(false);
   const [users, setUsers] = useState("");
+  const [carts, setCarts] = useState([]);
   const navigate = useNavigate();
   const loginUser = auth.currentUser;
   const { isDark } = useContext(ThemeContext);
-  console.log(isDark);
+  // const dates = new Date()
+  // const [count, setCount] = useState(0);
   console.log("user", users);
+  console.log("carts", carts);
 
   // auth.currentUser
+  useEffect(() => {
+    const getData = async () => {
+      const snckcollectionRef = collection(db, "cartProduct");
+      const data = await getDocs(snckcollectionRef);
+      setCarts(
+        data.docs.map((doc) => ({
+          id: doc.id,
+          userId: doc.data().userId,
+          name: doc.data().name,
+          price: doc.data().price,
+          count: doc.data().count.count,
+        }))
+      );
+    };
+    // setCount(CartTotal);
+    getData();
+  }, [isLogin]);
+  console.log("carts", carts);
+
+  useEffect(() => {
+    const userCartCount = carts
+      .filter((item) => item?.userId === auth.currentUser?.uid)
+      .map((item) => {
+        return item.count;
+      });
+
+    const CartTotal = userCartCount.reduce((acc, cur) => {
+      return acc + cur;
+    }, 0);
+
+    setCartCount(CartTotal);
+  }, [carts]);
+
+  // 로그인 유저의 장바구니 총수량
+
+  // console.log("userCartCount :", userCartCount);
+  // // 로그인유저의  과자 총합
+
+  // console.log("cartTotal:", CartTotal);
+  // sessionStorage.setItem("total", CartTotal);
+  // sessionStorage.removeItem("total");
   //------------
   useEffect(() => {
     const userState = onAuthStateChanged(auth, (user) => {
@@ -74,7 +119,12 @@ export default function Navbar({
         <RightNav>
           <RightNavLink to={isLogin ? "/cartpage" : "/signin"}>
             <CartImg src={cart} />
-            {loginUser ? <CartCount>{cartCount}</CartCount> : null}
+            {loginUser ? (
+              <CartCount>
+                {/* {sessionStorage.getItem("total", CartTotal)} */}
+                {cartCount}
+              </CartCount>
+            ) : null}
             {/* <CartCount>{cartCount}</CartCount> */}
           </RightNavLink>
           <RightNavLink to={isLogin ? "/mypage" : "/signin"}>
@@ -98,7 +148,10 @@ export default function Navbar({
           <RightNavLink to="/signin">
             <LogiBtn
               onClick={() => {
-                signOut(auth);
+                if (loginUser) {
+                  signOut(auth);
+                  setCartCount(0);
+                }
               }}
             >
               {isLogin ? "로그아웃" : "로그인"}
