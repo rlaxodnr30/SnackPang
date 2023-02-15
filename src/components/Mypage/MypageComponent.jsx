@@ -61,19 +61,20 @@ export default function MypageComponent({
     updateProfile(auth.currentUser, {
       photoURL: imgUrl,
     });
-
     setUserImage(imgUrl);
     // imgUrl.current = { url: imgUrl };
   };
 
-  const profileChangeBtn = () => {
-    updateProfile(auth.currentUser, {
+  const profileChangeBtn = async () => {
+    await updateProfile(auth.currentUser, {
       displayName: nickNameRef.current.value,
     });
     // setUserNick(displayName);
     // setUserNick(nickNameRef.current.value); // 닉네임 스테이트로 관리함  추가
     alert("닉네임이 변경되었습니다!");
+    setUserNick(auth.currentUser.displayName); //state관리를 추가하니깐 갑자기 된다?
   };
+  console.log("asd", userNick);
   console.log("dd :", auth.currentUser);
   const passwordChangeBtn = async () => {
     const user = auth.currentUser;
@@ -128,7 +129,7 @@ export default function MypageComponent({
             <h3>MY PROFILE</h3>
             <h3>닉네임</h3>
             <p>{loginUser?.displayName}</p>
-            {/* <p>{userNick}</p>   state 로 추가함 */}
+            {/* <p>{userNick}</p> */}
             <div>
               <ProfileName
                 ref={nickNameRef}

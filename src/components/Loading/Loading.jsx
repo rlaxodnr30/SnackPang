@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Spinner from "../../images/Spinner-1s-200px.gif";
-export default function Loding() {
+export default function Loading() {
   return (
     <Background>
       <LoadingText>Loading</LoadingText>

@@ -1,14 +1,34 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { HiOutlineShoppingCart } from "react-icons/hi";
 import ModalProduct from "./ModalProduct";
-import { auth } from "../../firebase";
+import { auth, db } from "../../firebase";
+import { collection, getDocs } from "firebase/firestore";
 
-export default function ProductHome({ r, clickSnacks, setClickSnacks, key }) {
+export default function ProductHome({
+  r,
+  clickSnacks,
+  setClickSnacks,
+  setCartCount,
+}) {
   const navigate = useNavigate();
   const loginUser = auth.currentUser;
   const [modal, setModal] = useState(false);
+  const [product, setProduuct] = useState([]);
+  const [clickCart, setClickCart] = useState([]);
+
+  // console.log("clicCart", clickCart);
+
+  const userCart = async () => {
+    const cart = await getDocs(collection(db, "product"));
+    const cartProduct = cart.docs.map((doc) => ({
+      id: doc.id,
+      name: doc.data().name,
+      price: doc.data().price,
+    }));
+    setProduuct(cartProduct);
+  };
   return (
     <SnackCard key={r.id} id={r.id}>
       <ProducImg
@@ -30,9 +50,16 @@ export default function ProductHome({ r, clickSnacks, setClickSnacks, key }) {
       <SnackName>상품명:{r.name}</SnackName>
       <SnackPrice>판매가:{r.price}원</SnackPrice>
       <CartButton
-        onClick={() => {
+        onClick={(e) => {
           if (loginUser) {
             setModal(!modal);
+            setClickCart({
+              id: r.id,
+              name: r.name,
+              image: r.image,
+              price: r.price,
+            });
+            // userCart();
           } else {
             alert("로그인이 필요합니다!");
             navigate("/signin");
@@ -48,7 +75,14 @@ export default function ProductHome({ r, clickSnacks, setClickSnacks, key }) {
           }}
         />
       </CartButton>
-      {modal ? <ModalProduct setModal={setModal} modal={modal} /> : null}
+      {modal ? (
+        <ModalProduct
+          setCartCount={setCartCount}
+          clickCart={clickCart}
+          setModal={setModal}
+          modal={modal}
+        />
+      ) : null}
     </SnackCard>
   );
 }

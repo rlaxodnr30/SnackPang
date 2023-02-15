@@ -1,18 +1,84 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { v4 as uuidv4 } from "uuid";
 import {
   AiFillCloseCircle,
   AiOutlineMinus,
   AiOutlinePlus,
 } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../../firebase";
+import { auth, db } from "../../firebase";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
 
-export default function ModalProduct({ setModal, modal }) {
+export default function ModalProduct({
+  setModal,
+  modal,
+  clickCart,
+  setCartCount,
+}) {
   const loginUser = auth.currentUser;
   console.log(loginUser);
   const navigate = useNavigate();
   const [count, setCount] = useState(1);
+  console.log(clickCart.price * count);
+  console.log(clickCart);
+
+  const inCartBtn = async () => {
+    const cartData = await getDocs(collection(db, "cartProduct"));
+
+    let incartProduct = false; // 이미 장바구니에있다는걸 표시
+    let incartProductId = null; // 이미장바구니에 있는과자아이디 표시
+    let incartProductCount = 0; // 이미장바구니에있는과자수량
+
+    cartData.docs.forEach((doc) => {
+      if (
+        clickCart.name === doc.data().name &&
+        auth.currentUser.uid === doc.data().userId
+      ) {
+        console.log("??", clickCart.name, doc.data().name);
+        incartProduct = true;
+        incartProductId = doc.id;
+        incartProductCount = doc.data().count;
+        return;
+      }
+    });
+    // console.log("asd", incartProductId, incartProductCount.count);
+    if (incartProduct === true) {
+      // 이미 있는 애의 수량에서 추가할 수량을 더해주고
+      const snackDocRef = doc(db, "cartProduct", incartProductId);
+      await updateDoc(snackDocRef, {
+        count: { ...count, count: incartProductCount.count + count }, //이미있는수를더함
+      });
+      alert("장바구니에 추가 되었습니다!!");
+      // setCartCount((prev) => prev + count);
+    } else {
+      const docRef = await addDoc(collection(db, "cartProduct"), {
+        userId: loginUser.uid,
+        id: uuidv4(),
+        name: clickCart.name,
+        price: clickCart.price,
+        count: { count },
+      });
+      // CartCount((prev) => prev + count);
+      alert("장바구니에 담겼습니다!");
+    }
+
+    setCartCount((prev) => prev + count);
+    // 추가를 한다음에 다시 개수를 가져와야함.
+    // const cartRef = await getDocs(collection(db, "cartProduct"));
+    // cartRef.docs.forEach((doc) => ({
+    //   userId: doc.data().userId,
+    //   count: doc.data().count.count,
+    // }));
+    // console.log("@@@@", cartRef);
+  };
+
   return (
     <>
       <ModalBoxKing>
@@ -23,7 +89,7 @@ export default function ModalProduct({ setModal, modal }) {
                 setModal(!modal);
               }}
             ></CloseBtn>
-            <h1>홈런볼</h1>
+            <h1>{clickCart.name}</h1>
             <CountBox>
               <CountBtn
                 onClick={() => {
@@ -44,15 +110,16 @@ export default function ModalProduct({ setModal, modal }) {
               </CountBtn>
             </CountBox>
             <ImgBox>
-              <Img src="aa.png" />
+              <Img src={clickCart.image} />
             </ImgBox>
-            <Price>가격 : 2200원</Price>
-            <TotalPrice>합계 : 2200원</TotalPrice>
+            <Price>가격 : {clickCart.price}</Price>
+            <TotalPrice>합계 :{clickCart.price * count}원</TotalPrice>
           </ModalContent>
           <CartBtnBox>
             <CartBtn
               onClick={() => {
-                alert("장바구니에 담겼습니다!");
+                inCartBtn();
+                // alert("장바구니에 담겼습니다!");
               }}
             >
               장바구니

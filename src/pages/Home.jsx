@@ -6,9 +6,11 @@ export default function Home({
   clickSnacks,
   loading,
   setLoading,
+  setCartCount,
 }) {
   return (
     <HomePage
+      setCartCount={setCartCount}
       setClickSnacks={setClickSnacks}
       clickSnacks={clickSnacks}
       loading={loading}

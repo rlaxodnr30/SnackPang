@@ -25,14 +25,14 @@ import {
 } from "firebase/firestore";
 import { ThemeContext } from "../../context/ThemeContext";
 
-export default function CartPageComponent() {
+export default function CartPageComponent({ setCartCount }) {
   const { isDark } = useContext(ThemeContext);
   const [userCartProduct, setUserCartProduct] = useState([]);
   console.log("usercart:", userCartProduct);
   const loginUser = auth.currentUser;
   console.log(loginUser);
   // console.log(userCart);
-  console.log(loginUser.uid);
+  // console.log(loginUser.uid);
   // let sum = userCartProduct.total.reduce((acc, cur,i) => {
   //   return acc[i] + cur[i];
   // }, 0);
@@ -85,8 +85,9 @@ export default function CartPageComponent() {
   }, []);
   console.log("total!", userCartProduct);
 
-  const handleCartDelete = async (id) => {
+  const handleCartDelete = async (id, count) => {
     await deleteDoc(doc(db, "cartProduct", id));
+    setCartCount((prev) => prev - count);
   };
   return (
     <>
@@ -125,7 +126,8 @@ export default function CartPageComponent() {
                       <td>
                         <DeleteBtn
                           onClick={() => {
-                            handleCartDelete(item.id);
+                            handleCartDelete(item.id, item.count.count);
+                            // setCartCount((prev) => prev - item.count.count);
                             alert("삭제완료");
                           }}
                         >
@@ -149,7 +151,7 @@ export default function CartPageComponent() {
                 </th>
                 <th>주문합계:</th>
                 <th>
-                  {total.reduce((acc, cur, i) => {
+                  {total.reduce((acc, cur) => {
                     // if (userCartProduct[i].userId === loginUser.uid)
                     return acc + cur;
                   }, 0)}
