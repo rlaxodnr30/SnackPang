@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
+import { FiMoreVertical } from "react-icons/fi";
 import { db, auth } from "../../firebase";
 import {
   addDoc,
@@ -16,6 +17,7 @@ import blankProfiles from "../../images/blankProfiles.png";
 export default function DetailReview({ item, i, reviewList, id }) {
   const [editBox, setEditBox] = useState(false);
   const [editVal, setEditVal] = useState("");
+  const [toggle, setToggle] = useState(false);
   const loginUser = auth.currentUser;
   //삭제버튼 함수
   const handledelete = async (id, i) => {
@@ -33,10 +35,12 @@ export default function DetailReview({ item, i, reviewList, id }) {
       <div style={{ width: "150px" }}>
         <UserProfileImgBox>
           {/* <ProfileImg src={item?.userImage} /> */}
-          <ProfileImg src={item.userImage ? item?.userImage : blankProfiles} />
+          <ProfileImg
+            src={item.userImage ? auth.currentUser?.photoURL : blankProfiles}
+          />
         </UserProfileImgBox>
         <div>
-          <UserReviewName>{item?.displayName}</UserReviewName>
+          <UserReviewName>{auth.currentUser?.displayName}</UserReviewName>
         </div>
         <Date>{item?.datenow}</Date>
         <ProductName>{item.snackName}</ProductName>
@@ -56,7 +60,7 @@ export default function DetailReview({ item, i, reviewList, id }) {
         )}
         {/* <Content>{item.content}</Content> */}
       </ContentBox>
-      {loginUser?.uid === item.userId ? (
+      {toggle === true && loginUser?.uid === item.userId ? (
         <DeleteModifybtn
           onClick={() => {
             if (loginUser?.uid === item.userId) {
@@ -69,16 +73,30 @@ export default function DetailReview({ item, i, reviewList, id }) {
         </DeleteModifybtn>
       ) : null}
 
-      {loginUser?.uid === item.userId ? (
-        <DeleteModifybtn
+      {toggle === true && loginUser?.uid === item.userId ? (
+        <>
+          <Modifybtn
+            onClick={() => {
+              modifyBtn(item.id, i);
+              setEditBox(!editBox);
+            }}
+          >
+            {editBox ? "수정완료" : "수정"}
+          </Modifybtn>{" "}
+          <FiMoreVertical
+            onClick={() => {
+              return setToggle(!toggle);
+            }}
+            style={{ cursor: "pointer" }}
+          />
+        </>
+      ) : (
+        <FiMoreVertical
           onClick={() => {
-            modifyBtn(item.id, i);
-            setEditBox(!editBox);
+            setToggle(!toggle);
           }}
-        >
-          {editBox ? "수정완료" : "수정"}
-        </DeleteModifybtn>
-      ) : null}
+        />
+      )}
     </ReviewBigBox>
   );
 }
@@ -156,8 +174,30 @@ export const ReviewClickBtn = styled.button`
 `;
 export const DeleteModifybtn = styled.button`
   border: none;
+
   width: 80px;
+  height: 50px;
   padding: 0px;
+  border-radius: 10px;
   background-color: #ffffff;
+  &:hover {
+    background: #de4c2a;
+    color: white;
+    transition: 0.5s;
+  }
+  cursor: pointer;
+`;
+export const Modifybtn = styled.button`
+  border: none;
+  width: 80px;
+  height: 50px;
+  padding: 0px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  &:hover {
+    background: #de4c2a;
+    color: white;
+    transition: 0.5s;
+  }
   cursor: pointer;
 `;

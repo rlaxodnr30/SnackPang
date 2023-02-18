@@ -25,21 +25,22 @@ import {
 import { useNavigate } from "react-router-dom";
 import { addDoc, collection } from "firebase/firestore";
 import { getDownloadURL, ref } from "firebase/storage";
+import Loading from "../Loading/Loading";
 
 export default function SignUpComponent() {
+  const [loading, setLoading] = useState(false);
   //useRef input값 받아오기
   const idRef = useRef(null);
   const pwRef = useRef(null);
   const nameRef = useRef(null);
   const navigate = useNavigate();
+  const [imerroMsg, setImErroMsg] = useState("");
+  const [pwerroMsg, setPwErroMsg] = useState("");
+  const [nierroMsg, setNiErroMsg] = useState("");
 
   //회원가입
   const signUpBtn = async () => {
-    // console.log(
-    //   idRef.current.value,
-    //   pwRef.current.value,
-    //   nameRef.current.value
-    // );
+    setLoading(true);
     /* 이메일 정규표현식 */
     const emailReg = new RegExp(
       "^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$"
@@ -89,17 +90,46 @@ export default function SignUpComponent() {
       pwRef.current.value
       // nameRef.current.value
     );
-    // console.log(userLogin);
+    setLoading(false);
     navigate("/");
   };
-  // 구글로그인
-  // const googlelogin = async () => {
-  //   const googlelog = await signInWithPopup(auth, provider);
-  //   console.log(googlelog);
-  // };
 
+  // 현재 이메일 확인 문자
+  const handleEmail = (e) => {
+    const nowId = e.target.value;
+    const idRegex =
+      /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+    if (!idRegex.test(nowId)) {
+      setImErroMsg("*이메일 형식에 맞춰서 작성해주세요.");
+    } else {
+      setImErroMsg("");
+    }
+  };
+  //현재 닉네임 확인 문자
+  const handleNick = (e) => {
+    const nowNic = e.target.value;
+    const nicRegex = /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,8}$/;
+    if (!nicRegex.test(nowNic)) {
+      setNiErroMsg("*2자 이상 8자 이하로 작성해주세요.");
+    } else {
+      setNiErroMsg("");
+    }
+  };
+  //현재 패스워드 확인 문자
+  const handlePw = (e) => {
+    const nowPw = e.target.value;
+    const pwRegex = /^[A-Za-z0-9]{8,20}$/;
+    if (!pwRegex.test(nowPw)) {
+      setPwErroMsg(
+        "*비밀번호는 영문 대소문자, 숫자를 혼합하여 8~20자로 입력해주세요"
+      );
+    } else {
+      setPwErroMsg("");
+    }
+  };
   return (
     <>
+      {loading === true ? <Loading /> : null}
       <SignUpBox>
         <SignInput>
           <h1>회원가입</h1>
@@ -107,33 +137,39 @@ export default function SignUpComponent() {
             <InputTitle>닉네임</InputTitle>
             <InputempwBox>
               <Inputempw
+                onChange={handleNick}
                 ref={nameRef}
                 placeholder="닉네임을 입력해주세요!"
                 type="text"
               />
             </InputempwBox>
+            <Text>{nierroMsg}</Text>
           </div>
 
           <div>
             <InputTitle>이메일주소</InputTitle>
             <InputempwBox>
               <Inputempw
+                onChange={handleEmail}
                 ref={idRef}
                 placeholder="snackpang@snackpang.com"
                 type="text"
               />
             </InputempwBox>
+            <Text>{imerroMsg}</Text>
           </div>
           <div>
             <InputTitle>패스워드</InputTitle>
             <InputempwBox>
               <Inputempw
+                onChange={handlePw}
                 ref={pwRef}
                 type="password"
                 placeholder="비밀번호를 입력해주세요."
               />
               <Text>
-                *비밀번호는 영문 대소문자, 숫자를 혼합하여 8~20자로 입력해주세요
+                {pwerroMsg}
+                {/* *비밀번호는 영문 대소문자, 숫자를 혼합하여 8~20자로 입력해주세요 */}
               </Text>
             </InputempwBox>
           </div>
@@ -142,18 +178,6 @@ export default function SignUpComponent() {
               회원가입
             </ButtonSign>
           </ButtonBox>
-          {/* <SocialBtnBox>
-            <ButtonSocial type="button">
-              <SocialIcon src={github} />
-              깃헙 로그인
-            </ButtonSocial>
-          </SocialBtnBox>
-          <SocialBtnBox>
-            <ButtonSocial onClick={googlelogin} type="button">
-              <SocialIcon src={googles} />
-              구글 로그인
-            </ButtonSocial>
-          </SocialBtnBox> */}
         </SignInput>
       </SignUpBox>
     </>
@@ -162,5 +186,5 @@ export default function SignUpComponent() {
 export const Text = styled.div`
   margin-top: 4px;
   font-size: 10px;
-  color: gray;
+  color: red;
 `;

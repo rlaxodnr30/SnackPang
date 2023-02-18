@@ -51,13 +51,6 @@ export default function DetailComponent({
   const { id } = useParams();
 
   const loginUser = auth.currentUser;
-  console.log("click:", clickSnacks);
-  console.log("revList:", reviewList);
-  console.log("login", loginUser);
-
-  // const date = new Date();
-  // console.log(date);
-  // const snackDoc = doc(db, 'cartProduct')
 
   useEffect(() => {
     const getData = async () => {
@@ -111,7 +104,6 @@ export default function DetailComponent({
           clickSnacks.name === doc.data().name &&
           auth.currentUser.uid === doc.data().userId
         ) {
-          console.log(clickSnacks.name, doc.data().name);
           incartProduct = true;
           incartProductId = doc.id;
           incartProductCount = doc.data().count;
@@ -150,15 +142,15 @@ export default function DetailComponent({
     // 저 userId로 firebase에서 찾아서 가져오는 거
     const goReview = await addDoc(collection(db, "userReview"), {
       content: reviewContent,
-      userId: loginUser.uid,
-      userImage: loginUser.photoURL,
+      userId: loginUser?.uid,
+      userImage: loginUser?.photoURL,
       datenow: `${new window.Date().getFullYear()}-${
         new window.Date().getMonth() + 1
       }-${new window.Date().getDate()} `,
-      displayName: loginUser.displayName,
-      snackName: clickSnacks.name,
-      imageUrl: clickSnacks.image,
-      userImg: loginUser.photoURL,
+      displayName: loginUser?.displayName,
+      snackName: clickSnacks?.name,
+      imageUrl: clickSnacks?.image,
+      userImg: loginUser?.photoURL,
     });
     alert("소중한 리뷰 감사합니다!");
   };
@@ -173,21 +165,6 @@ export default function DetailComponent({
           id: doc.id,
           ...doc.data(),
         }));
-
-        // const test = [1,2,3].map((item) => item);
-        // const test = [1,2,3].map((item) => {item});
-        // const function = () => {}
-
-        // const review = querySnapshot.docs.map((doc) => {
-        //   return {
-        //     id: doc.id,
-        //     ...doc.data(),
-        //   }
-        // })
-
-        // ...
-        // doc.data() => { a: 1, b: 2 }
-        // ...doc.data() => a:1, b:2
         setReviewList(review);
       });
       return unsubscribe;

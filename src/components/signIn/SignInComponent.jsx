@@ -12,6 +12,7 @@ import {
   SocialBtnBox,
   SocialIcon,
   LogoImg,
+  Text,
 } from "./SignInComponent";
 import { useNavigate } from "react-router-dom";
 import { auth, provider, providergit } from "../../firebase.js";
@@ -28,6 +29,9 @@ export default function SignInComponent() {
   const idRef = useRef(null);
   const pwRef = useRef(null);
   const [loading, setLoading] = useState(false);
+  const [inVal, setInVal] = useState(true);
+  const [imerroMsg, setImErroMsg] = useState("");
+  const [pwerroMsg, setPwErroMsg] = useState("");
   const loginUser = auth.currentUser;
   console.log("user", loginUser);
 
@@ -66,15 +70,7 @@ export default function SignInComponent() {
       alert("로그인 실패");
     }
   };
-  //   const login = await signInWithEmailAndPassword(
-  //     auth,
-  //     idRef.current.value,
-  //     pwRef.current.value
-  //   );
-  //   alert("로그인 성공");
-  //   console.log(login);
-  //   navigate("/");
-  // };
+
   //구글로그인
   const googlelogin = async () => {
     try {
@@ -93,7 +89,31 @@ export default function SignInComponent() {
       console.log(error);
     }
   };
-  console.log(loading);
+
+  //현재 이메일 확인
+  const handleEmail = (e) => {
+    const nowId = e.target.value;
+    const idRegex =
+      /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+    if (!idRegex.test(nowId)) {
+      setImErroMsg("*이메일 형식에 맞춰서 작성해주세요.");
+    } else {
+      setImErroMsg("");
+    }
+  };
+  //현재 패스워드 확인
+  const handlePw = (e) => {
+    const nowPw = e.target.value;
+    const pwRegex = /^[A-Za-z0-9]{8,20}$/;
+    if (!pwRegex.test(nowPw)) {
+      setPwErroMsg(
+        "*비밀번호는 영문 대소문자, 숫자를 혼합하여 8~20자로 입력해주세요"
+      );
+    } else {
+      setPwErroMsg("");
+    }
+  };
+
   return (
     <>
       {loading === true ? <Loading /> : null}
@@ -110,22 +130,26 @@ export default function SignInComponent() {
             <InputTitle>이메일주소</InputTitle>
             <InputempwBox>
               <Inputempw
+                onChange={handleEmail}
                 ref={idRef}
                 placeholder="snackpang@snackpang.com"
                 type="text"
               />
             </InputempwBox>
+            <Text>{imerroMsg}</Text>
           </div>
           <div>
             <InputTitle>패스워드</InputTitle>
             <InputempwBox>
               <Inputempw
+                onChange={handlePw}
                 ref={pwRef}
                 type="password"
                 placeholder="비밀번호를 입력해주세요."
               />
             </InputempwBox>
           </div>
+          <Text>{pwerroMsg}</Text>
 
           <ButtonBox>
             <ButtonSign onClick={singIN} type="submit">
