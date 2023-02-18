@@ -36,6 +36,12 @@ export const Inputempw = styled.input`
   margin-top: 5px;
   width: 300px;
   outline: none;
+
+  &.inval input {
+    border-color: red;
+    background: #ffd7d7;
+    color: red;
+  }
 `;
 
 export const ButtonBox = styled.div`
@@ -86,4 +92,9 @@ export const LogoImg = styled.img`
   border-radius: 10px;
   width: 300px;
   height: 150px;
+`;
+export const Text = styled.div`
+  margin-top: 4px;
+  font-size: 10px;
+  color: red;
 `;
