@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import {
   InputTitle,
@@ -8,23 +8,24 @@ import {
   Inputempw,
   ButtonBox,
   ButtonSign,
-  ButtonSocial,
-  SocialBtnBox,
-  SocialIcon,
+  CheckAll,
+  CheckList,
+  Text,
+  H4,
+  AgreeBox,
+  CheckBoxText,
+  CheckBoxTextCho,
+  CheckLabel,
+  CheckLabelAll,
 } from "./SignUpComponent";
-import googles from "../../images/googleicon.png";
-import github from "../../images/githubicon.png";
-import { auth, db, provider } from "../../firebase.js";
+import { auth } from "../../firebase.js";
 
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signInWithPopup,
   updateProfile,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { addDoc, collection } from "firebase/firestore";
-import { getDownloadURL, ref } from "firebase/storage";
 import Loading from "../Loading/Loading";
 
 export default function SignUpComponent() {
@@ -37,10 +38,48 @@ export default function SignUpComponent() {
   const [imerroMsg, setImErroMsg] = useState("");
   const [pwerroMsg, setPwErroMsg] = useState("");
   const [nierroMsg, setNiErroMsg] = useState("");
+  const [allCheck, setAllCheck] = useState(false);
+  const [ageCheck, setAgeCheck] = useState(false);
+  const [useCheck, setUseCheck] = useState(false);
+  const [marketingCheck, setMarketingCheck] = useState(false);
 
+  const allBtnHandle = () => {
+    if (allCheck === false) {
+      setAllCheck(true);
+      setAgeCheck(true);
+      setUseCheck(true);
+      setMarketingCheck(true);
+    } else {
+      setAllCheck(false);
+      setAgeCheck(false);
+      setUseCheck(false);
+      setMarketingCheck(false);
+    }
+  };
+  const ageBtnHandle = () => {
+    if (ageCheck === false) {
+      setAgeCheck(true);
+    } else {
+      setAgeCheck(false);
+    }
+  };
+  const useBtnHandle = () => {
+    if (useCheck === false) {
+      setUseCheck(true);
+    } else {
+      setUseCheck(false);
+    }
+  };
+  const marketBtnHandle = () => {
+    if (marketingCheck === false) {
+      setMarketingCheck(true);
+    } else {
+      setMarketingCheck(false);
+    }
+  };
   //회원가입
   const signUpBtn = async () => {
-    setLoading(true);
+    // setLoading(true);
     /* 이메일 정규표현식 */
     const emailReg = new RegExp(
       "^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$"
@@ -66,6 +105,10 @@ export default function SignUpComponent() {
 
     if (nameReg.test(inputname) === false) {
       alert("닉네임 2자 이상 8자 이하로 입력하세요");
+      return;
+    }
+    if (ageCheck === false || useCheck === false) {
+      alert("필수항목을 체크해주세요!");
       return;
     }
 
@@ -173,8 +216,63 @@ export default function SignUpComponent() {
               </Text>
             </InputempwBox>
           </div>
+          <AgreeBox>
+            <H4>약관동의</H4>
+            <CheckAll>
+              <input
+                onChange={allBtnHandle}
+                checked={allCheck}
+                id="check1"
+                type="checkbox"
+              />
+              <CheckLabelAll for="check1">전체동의</CheckLabelAll>
+            </CheckAll>
+            <CheckList>
+              <input
+                onChange={ageBtnHandle}
+                checked={ageCheck}
+                id="check2"
+                type="checkbox"
+              />
+              <CheckLabel for="check2">
+                만 14세 이상입니다 <CheckBoxText>(필수)</CheckBoxText>
+              </CheckLabel>
+            </CheckList>
+            <CheckList>
+              <input
+                onChange={useBtnHandle}
+                checked={useCheck}
+                id="check3"
+                type="checkbox"
+              />
+              <CheckLabel for="check3">
+                이용약관<CheckBoxText>(필수)</CheckBoxText>
+              </CheckLabel>
+            </CheckList>
+            <CheckList>
+              <input
+                onChange={marketBtnHandle}
+                checked={marketingCheck}
+                id="check4"
+                type="checkbox"
+              />
+              <CheckLabel for="check4">
+                마케팅동의<CheckBoxTextCho>(선택)</CheckBoxTextCho>
+              </CheckLabel>
+            </CheckList>
+          </AgreeBox>
           <ButtonBox>
-            <ButtonSign onClick={signUpBtn} type="submit">
+            <ButtonSign
+              style={{
+                background: `${
+                  ageCheck === true && useCheck === true
+                    ? "#3ea5f5"
+                    : "lightgray"
+                }`,
+              }}
+              onClick={signUpBtn}
+              type="submit"
+            >
               회원가입
             </ButtonSign>
           </ButtonBox>
@@ -183,8 +281,3 @@ export default function SignUpComponent() {
     </>
   );
 }
-export const Text = styled.div`
-  margin-top: 4px;
-  font-size: 10px;
-  color: red;
-`;
