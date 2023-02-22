@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import {
   InputTitle,
@@ -43,6 +43,7 @@ export default function SignUpComponent() {
   const [useCheck, setUseCheck] = useState(false);
   const [marketingCheck, setMarketingCheck] = useState(false);
 
+  //체크 핸들러
   const allBtnHandle = () => {
     if (allCheck === false) {
       setAllCheck(true);
@@ -77,6 +78,15 @@ export default function SignUpComponent() {
       setMarketingCheck(false);
     }
   };
+  //전체 동의 조건
+  useEffect(() => {
+    if (ageCheck === true && useCheck === true && marketingCheck === true) {
+      setAllCheck(true);
+    } else {
+      setAllCheck(false);
+    }
+  }, [ageCheck, useCheck, marketingCheck]);
+
   //회원가입
   const signUpBtn = async () => {
     // setLoading(true);
