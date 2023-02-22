@@ -92,6 +92,7 @@ export default function DetailReview({ item, i, reviewList, id }) {
         </>
       ) : (
         <FiMoreVertical
+          style={{ cursor: "pointer" }}
           onClick={() => {
             setToggle(!toggle);
           }}

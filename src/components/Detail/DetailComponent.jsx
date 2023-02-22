@@ -23,15 +23,18 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  limit,
   onSnapshot,
   orderBy,
   query,
+  startAfter,
   updateDoc,
 } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom";
 
 import styled from "styled-components";
 import DetailReview from "./DetailReview";
+import { async } from "@firebase/util";
 export default function DetailComponent({
   homeSnackUrl,
   clickSnacks,
@@ -42,11 +45,24 @@ export default function DetailComponent({
   const [reviewList, setReviewList] = useState([]);
   // const [reviewCount, setReviewCount] = useState(reviewCount)  리뷰개수
   const navigate = useNavigate();
-  // const dates = new Date();
-  // const d1 = new Date().getDate();
-  // console.log(d1);
+  //현재날짜
+  const dates = new window.Date();
+  const year = dates.getFullYear();
+  const month = ("0" + (dates.getMonth() + 1)).slice(-2);
+  const day = ("0" + dates.getDate()).slice(-2);
+  const dateStr = year + "-" + month + "-" + day;
+  // 시간
+  const hours = ("0" + dates.getHours()).slice(-2);
+  const minutes = ("0" + dates.getMinutes()).slice(-2);
+  const seconds = ("0" + dates.getSeconds()).slice(-2);
+  const timeStr = hours + ":" + minutes + ":" + seconds;
+  const today = dateStr + "  " + timeStr;
+  // console.log(today);
+  //
   const [snack, setSnack] = useState({});
   const [snacks, setSnacks] = useState([]);
+  const [lastReview, setLastReview] = useState(null);
+
   const snckcollectionRef = collection(db, "product");
   const { id } = useParams();
 
@@ -118,7 +134,7 @@ export default function DetailComponent({
           // ...snackDocRef,
           count: { ...count, count: incartProductCount.count + count }, //이미있는수를더함
         });
-        console.log("이미 장바구니에 있습니다!");
+        alert("장바구니에 담겼습니다!");
       } else {
         const docRef = await addDoc(collection(db, "cartProduct"), {
           userId: loginUser.uid,
@@ -140,13 +156,16 @@ export default function DetailComponent({
       return;
     }
     // 저 userId로 firebase에서 찾아서 가져오는 거
+
     const goReview = await addDoc(collection(db, "userReview"), {
       content: reviewContent,
       userId: loginUser?.uid,
       userImage: loginUser?.photoURL,
-      datenow: `${new window.Date().getFullYear()}-${
-        new window.Date().getMonth() + 1
-      }-${new window.Date().getDate()} `,
+      datenow: today,
+      // time: window.Date.now(),
+      // datenow: `${new window.Date().getFullYear()}-${
+      //   new window.Date().getMonth() + 1
+      // }-${new window.Date().getDate()} ${timeStr} `,
       displayName: loginUser?.displayName,
       snackName: clickSnacks?.name,
       imageUrl: clickSnacks?.image,
@@ -154,37 +173,49 @@ export default function DetailComponent({
     });
     alert("소중한 리뷰 감사합니다!");
   };
-  //데이터 리뷰가져오기
+  // 데이터 리뷰가져오기
   useEffect(() => {
     const getReviews = async () => {
-      const q = query(collection(db, "userReview"));
+      const q = query(collection(db, "userReview"), orderBy("datenow", "desc"));
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        //이걸쓴이유
         const review = querySnapshot.docs.map((doc) => ({
-          //소괄호 중괄호 하는이유 객체인걸 알려주려고 씀
           id: doc.id,
           ...doc.data(),
         }));
         setReviewList(review);
       });
       return unsubscribe;
-      // const getReview = await getDocs(collection(db, "userReview"));
-      // setReviewList(
-      //   getReview.docs.map((doc) => ({
-      //     id: doc.id,
-      //     ...doc.data(),
-      // content: doc.data().content,
-      // date: doc.data().date,
-      // userId: doc.data().userId,
-      // displayName: doc.data().displayName,
-      // imgurl: clickSnacks.image,
-      // snackName: doc.data().snackName,
-      // userImg: doc.data().userImg,
-      //   }))
-      // );
     };
     getReviews();
   }, []);
+
+  // const getReviews = async (limitReviews, lastReviewDoc) => {
+  //   let q = query(
+  //     collection(db, "userReview"),
+  //     orderBy("datenow", "desc"),
+  //     limit(limitReviews)
+  //   );
+  //   if (lastReviewDoc) {
+  //     q = query(q, startAfter(lastReviewDoc));
+  //   }
+  //   const unsubscribe = onSnapshot(q, (querySnapshot) => {
+  //     const review = querySnapshot.docs.map((doc) => ({
+  //       id: doc.id,
+  //       ...doc.data(),
+  //     }));
+  //     setReviewList((prev) => [...prev, ...review]); // 이전 리뷰 리스트와 새로운 리뷰 리스트를 병합
+  //     setLastReview(querySnapshot.docs[querySnapshot.docs.length - 1]); // 마지막 리뷰 저장
+  //   });
+  //   return unsubscribe;
+  // };
+
+  // useEffect(() => {
+  //   getReviews(6, null);
+  // }, []);
+
+  // const handleLoadMore = () => {
+  //   getReviews(6, lastReview);
+  // };
 
   return (
     <MainWrap>
@@ -329,13 +360,14 @@ export default function DetailComponent({
           <h2>상품리뷰</h2>
           <div
             style={{
-              border: "1px solid gray",
+              border: "1px solid blue",
               borderRadius: "5px",
               padding: "5px",
               width: "800px",
               height: "500px",
               backgroundColor: "white",
               marginTop: "40px",
+              overflowY: "scroll",
             }}
           >
             {reviewList.map((item, i) => {

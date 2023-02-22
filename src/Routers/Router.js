@@ -20,7 +20,7 @@ export default function Router() {
   const [users, setUsers] = useState("");
   const [loading, setLoading] = useState(true);
   const [cartCount, setCartCount] = useState(0);
-  console.log("clickSnack", clickSnacks);
+  // console.log("clickSnack", clickSnacks);
   return (
     <BrowserRouter>
       <Navbar

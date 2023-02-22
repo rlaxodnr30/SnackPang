@@ -150,7 +150,6 @@ export default function SignInComponent() {
             </InputempwBox>
           </div>
           <Text>{pwerroMsg}</Text>
-
           <ButtonBox>
             <ButtonSign onClick={singIN} type="submit">
               로그인

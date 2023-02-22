@@ -38,8 +38,8 @@ export default function Navbar({
   const { isDark } = useContext(ThemeContext);
   // const dates = new Date()
   // const [count, setCount] = useState(0);
-  console.log("user", users);
-  console.log("carts", carts);
+  // console.log("user", users);
+  // console.log("carts", carts);
 
   // auth.currentUser
   useEffect(() => {
@@ -59,7 +59,7 @@ export default function Navbar({
     // setCount(CartTotal);
     getData();
   }, [isLogin]);
-  console.log("carts", carts);
+  // console.log("carts", carts);
 
   useEffect(() => {
     const userCartCount = carts
