@@ -13,18 +13,16 @@ import {
   SnackPrice,
 } from "./HomePage";
 import Swing from "../../images/swingChip.jpg";
-import Sun from "../../images/sunchip.png";
-import Dodo from "../../images/Nacho.jpg";
-import Banner from "../../images/Banner.png";
 import snackMain from "../../images/snackMain.mp4";
 import styled from "styled-components";
 import { db } from "../../firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
 import DetailComponent from "../Detail/DetailComponent.jsx";
 import { ThemeContext } from "../../context/ThemeContext";
 import Loading from "../Loading/Loading";
 import ProductHome from "./ProductHome";
 import SimpleSlider from "./Slide";
+import { useSelector } from "react-redux";
 
 export default function Home({
   setCartCount,
@@ -37,6 +35,8 @@ export default function Home({
   const [showButton, setShowButton] = useState(false);
   const [inputVal, setInutVal] = useState("");
   const [snacks, setSnacks] = useState([]);
+  const today = useSelector((state) => state.time);
+
   // console.log("snacks :", snacks);
 
   const snckcollectionRef = collection(db, "product");
@@ -75,20 +75,6 @@ export default function Home({
     setLoading(true);
     const getData = async () => {
       const data = await getDocs(snckcollectionRef);
-      // console.log("data: ", data);
-      // const snackData = [];
-      // console.log(data);
-
-      // data.forEach((doc) => {
-      //   snackData.push({
-      //     id: doc.data().id,
-      //     name: doc.data().name,
-      //     price: doc.data().price,
-      //     image: doc.data().image,
-      //   });
-      // });
-      // setSnacks(snackData);
-      // console.log(data.data());
       setSnacks(
         data.docs.map((doc) => ({
           id: doc.id,
@@ -101,6 +87,7 @@ export default function Home({
     getData();
     setLoading(false);
   }, []);
+
   return (
     <div>
       {loading ? <Loading /> : null}
