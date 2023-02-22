@@ -27,6 +27,8 @@ import {
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import Loading from "../Loading/Loading";
+import MarketingModal from "./MarketingModal";
+import UseModal from "./UseModal";
 
 export default function SignUpComponent() {
   const [loading, setLoading] = useState(false);
@@ -42,6 +44,8 @@ export default function SignUpComponent() {
   const [ageCheck, setAgeCheck] = useState(false);
   const [useCheck, setUseCheck] = useState(false);
   const [marketingCheck, setMarketingCheck] = useState(false);
+  const [openmodal, setOpenModal] = useState(false);
+  const [openUseModal, setOpenUseModal] = useState(false);
 
   //체크 핸들러
   const allBtnHandle = () => {
@@ -183,7 +187,12 @@ export default function SignUpComponent() {
   return (
     <>
       {loading === true ? <Loading /> : null}
-      <SignUpBox>
+      <SignUpBox
+      // onClick={() => {
+      //   setOpenModal(false);
+      //   setOpenUseModal(false);
+      // }}
+      >
         <SignInput>
           <h1>회원가입</h1>
           <div>
@@ -245,7 +254,14 @@ export default function SignUpComponent() {
                 type="checkbox"
               />
               <CheckLabel for="check2">
-                만 14세 이상입니다 <CheckBoxText>(필수)</CheckBoxText>
+                만 14세 이상입니다{" "}
+                <CheckBoxText
+                  onClick={() => {
+                    setOpenUseModal(true);
+                  }}
+                >
+                  (필수)
+                </CheckBoxText>
               </CheckLabel>
             </CheckList>
             <CheckList>
@@ -255,8 +271,18 @@ export default function SignUpComponent() {
                 id="check3"
                 type="checkbox"
               />
+              {openUseModal ? (
+                <UseModal setOpenUseModal={setOpenUseModal} />
+              ) : null}
               <CheckLabel for="check3">
-                이용약관<CheckBoxText>(필수)</CheckBoxText>
+                이용약관
+                <CheckBoxText
+                  onClick={() => {
+                    setOpenUseModal(true);
+                  }}
+                >
+                  (필수)
+                </CheckBoxText>
               </CheckLabel>
             </CheckList>
             <CheckList>
@@ -266,8 +292,18 @@ export default function SignUpComponent() {
                 id="check4"
                 type="checkbox"
               />
+              {openmodal ? (
+                <MarketingModal setOpenModal={setOpenModal} />
+              ) : null}
               <CheckLabel for="check4">
-                마케팅동의<CheckBoxTextCho>(선택)</CheckBoxTextCho>
+                마케팅동의
+                <CheckBoxTextCho
+                  onClick={() => {
+                    setOpenModal(true);
+                  }}
+                >
+                  (선택)
+                </CheckBoxTextCho>
               </CheckLabel>
             </CheckList>
           </AgreeBox>

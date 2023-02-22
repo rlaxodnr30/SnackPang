@@ -103,9 +103,11 @@ export const AgreeBox = styled.div`
 
 export const CheckBoxText = styled.span`
   color: #3ea5f5;
+  cursor: pointer;
 `;
 export const CheckBoxTextCho = styled.span`
   color: #c2c3c7;
+  cursor: pointer;
 `;
 export const CheckLabel = styled.label`
   font-size: 15px;

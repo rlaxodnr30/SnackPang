@@ -54,7 +54,7 @@ export default class SimpleSlider extends Component {
             <h3>5</h3>
           </div>
           <div>
-            <h3>6</h3>
+            <h3></h3>
           </div>
         </Slider>
       </div>
