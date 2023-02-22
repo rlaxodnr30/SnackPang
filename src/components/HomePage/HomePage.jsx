@@ -24,6 +24,7 @@ import DetailComponent from "../Detail/DetailComponent.jsx";
 import { ThemeContext } from "../../context/ThemeContext";
 import Loading from "../Loading/Loading";
 import ProductHome from "./ProductHome";
+import SimpleSlider from "./Slide";
 
 export default function Home({
   setCartCount,
@@ -121,7 +122,8 @@ export default function Home({
             backgroundImage: "url(/backImg.jpg)",
           }}
         >
-          <HomeTextBox>
+          <SimpleSlider></SimpleSlider>
+          {/* <HomeTextBox>
             <span style={{ fontSize: "24px", color: "beige" }}>
               평일 오후 4시까지 주문/결제된 건에 대하여 당일 배송!!
             </span>
@@ -139,8 +141,9 @@ export default function Home({
                 필요하신 경우 고객만족센터로 문의주세요.
               </span>
             </div>
-          </HomeTextBox>
+          </HomeTextBox> */}
         </HomeImg>
+
         <SearchInputBox>
           <SearchInput
             placeholder="찾으시는 과자를 검색해주세요!"
@@ -148,6 +151,7 @@ export default function Home({
           />
           <BsSearch style={{ marginLeft: "10px" }} />
         </SearchInputBox>
+
         <ProducImgBox style={{ marginTop: "30px" }}>
           {searched.map((r) => {
             return (
@@ -161,6 +165,7 @@ export default function Home({
             );
           })}
         </ProducImgBox>
+
         <ProducImgBox style={{ marginTop: "30px" }}>
           {snacks.map((r) => {
             return (
@@ -170,26 +175,6 @@ export default function Home({
                 clickSnacks={clickSnacks}
                 key={r.id}
               />
-              // <SnackCard key={r.id} id={r.id}>
-              //   <ProducImg
-              //     onClick={(e) => {
-              //       navigate(`/detail/${r.id}`);
-              //       if (r.image === e.target.src) {
-              //         return setClickSnacks({
-              //           id: r.id,
-              //           name: r.name,
-              //           image: r.image,
-              //           price: r.price,
-              //         });
-              //       }
-              //       console.log("stateSnack :", clickSnacks);
-              //       // setHomeSnackUrl(e.target.src);
-              //     }}
-              //     src={r.image}
-              //   />
-              //   <SnackName>상품명:{r.name}</SnackName>
-              //   <SnackPrice>판매가:{r.price}원</SnackPrice>
-              // </SnackCard>
             );
           })}
         </ProducImgBox>
@@ -264,5 +249,5 @@ export const SearchInputBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 40px;
 `;

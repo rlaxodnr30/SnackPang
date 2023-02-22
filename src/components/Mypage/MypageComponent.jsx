@@ -20,6 +20,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { ThemeContext } from "../../context/ThemeContext";
+import { useSelector } from "react-redux";
 
 export default function MypageComponent({
   setUserImage,
@@ -28,7 +29,7 @@ export default function MypageComponent({
   setUserNick,
 }) {
   const { isDark } = useContext(ThemeContext);
-  console.log(isDark);
+  // console.log(isDark);
   const [imgFile, setImgFile] = useState("");
   const imgRef = useRef();
   const navigate = useNavigate();
@@ -36,8 +37,12 @@ export default function MypageComponent({
   const passwordRef = useRef("");
   // console.log(auth.currentUser);
   const loginUser = auth.currentUser;
-  console.log(userNick);
-  console.log("loginuser :", loginUser);
+
+  const today = useSelector((state) => state.time);
+  console.log("config", today);
+
+  // console.log(userNick);
+  // console.log("loginuser :", loginUser);
   // console.log(nickNameRef);
 
   const saveImgFile = async () => {
@@ -74,8 +79,8 @@ export default function MypageComponent({
     alert("닉네임이 변경되었습니다!");
     setUserNick(auth.currentUser.displayName); //state관리를 추가하니깐 갑자기 된다?
   };
-  console.log("asd", userNick);
-  console.log("dd :", auth.currentUser);
+  // console.log("asd", userNick);
+  // console.log("dd :", auth.currentUser);
   const passwordChangeBtn = async () => {
     const user = auth.currentUser;
     const newPassword = passwordRef.current.value;

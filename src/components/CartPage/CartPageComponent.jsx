@@ -28,9 +28,9 @@ import { ThemeContext } from "../../context/ThemeContext";
 export default function CartPageComponent({ setCartCount }) {
   const { isDark } = useContext(ThemeContext);
   const [userCartProduct, setUserCartProduct] = useState([]);
-  console.log("usercart:", userCartProduct);
+  // console.log("usercart:", userCartProduct);
   const loginUser = auth.currentUser;
-  console.log(loginUser);
+  // console.log(loginUser);
   // console.log(userCart);
   // console.log(loginUser.uid);
   // let sum = userCartProduct.total.reduce((acc, cur,i) => {
@@ -53,7 +53,7 @@ export default function CartPageComponent({ setCartCount }) {
     return item.count.count;
   });
 
-  console.log("userCart:", totalCount);
+  // console.log("userCart:", totalCount);
   useEffect(() => {
     const cartProduct = async () => {
       const q = query(collection(db, "cartProduct"));
@@ -83,7 +83,7 @@ export default function CartPageComponent({ setCartCount }) {
     };
     cartProduct();
   }, []);
-  console.log("total!", userCartProduct);
+  // console.log("total!", userCartProduct);
 
   const handleCartDelete = async (id, count) => {
     await deleteDoc(doc(db, "cartProduct", id));
