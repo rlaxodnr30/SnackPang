@@ -3,18 +3,9 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { FiMoreVertical } from "react-icons/fi";
 import { db, auth } from "../../firebase";
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  onSnapshot,
-  query,
-  updateDoc,
-} from "firebase/firestore";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import blankProfiles from "../../images/blankProfiles.png";
-export default function DetailReview({ item, i, reviewList, id }) {
+export default function DetailReview({ item, i, reviewList, id, setTestData }) {
   const [editBox, setEditBox] = useState(false);
   const [editVal, setEditVal] = useState("");
   const [toggle, setToggle] = useState(false);
@@ -30,6 +21,7 @@ export default function DetailReview({ item, i, reviewList, id }) {
       content: editVal,
     });
   };
+
   return (
     <ReviewBigBox>
       <div style={{ width: "150px" }}>
@@ -48,7 +40,12 @@ export default function DetailReview({ item, i, reviewList, id }) {
       <ContentBox>
         {editBox ? (
           <input
-            style={{ border: "1px solid red" }}
+            style={{
+              border: "1px solid red",
+              width: "60%",
+              height: "20px",
+              borderRadius: "10px",
+            }}
             placeholder={item.content}
             value={editVal}
             onChange={(e) => {
@@ -134,7 +131,7 @@ export const Date = styled.div`
   /* display: inline-block; */
   vertical-align: top;
   padding-top: 3px;
-  font-size: 12px;
+  font-size: 8px;
   color: #555;
 `;
 export const ProductName = styled.div`

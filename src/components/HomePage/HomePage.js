@@ -42,3 +42,68 @@ export const SnackPrice = styled.span`
   font-weight: 500;
   margin-top: 10px;
 `;
+export const HomeImg = styled.div`
+  background-size: cover;
+  width: 100%;
+  height: 500px;
+`;
+export const StMoveTopButton = styled.div`
+  height: 60px;
+  width: 60px;
+  position: fixed;
+  bottom: 150px;
+  right: 100px;
+  z-index: 1;
+  border: none;
+  outline: none;
+  background: gray;
+  color: white;
+  cursor: pointer;
+  border-radius: 30px;
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    color: black;
+  }
+  @media screen and (max-width: 800px) {
+    display: none;
+  }
+`;
+export const HomeTextBox = styled.div`
+  margin-left: 40px;
+  font-weight: bold;
+  width: 400px;
+  height: 100%;
+  padding-top: 50px;
+  text-align: center;
+  color: white;
+`;
+export const SearchInput = styled.input`
+  border: none;
+  width: 30%;
+  height: 30px;
+  border-radius: 15px;
+  font-size: 16px;
+  margin-left: 5px;
+  &::placeholder {
+    color: #93938c;
+  }
+  &:hover {
+    background-color: beige;
+  }
+
+  &:focus {
+    color: #363636;
+    border: 1px solid gray;
+    outline: none;
+  }
+`;
+export const SearchInputBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 40px;
+`;

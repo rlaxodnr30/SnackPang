@@ -155,6 +155,10 @@ export default function DetailComponent({
       alert("로그인이 필요합니다.");
       return;
     }
+    if (reviewContent === "" || reviewContent.trim().length === 0) {
+      alert("리뷰를 작성해주세요!");
+      return;
+    }
     // 저 userId로 firebase에서 찾아서 가져오는 거
 
     const goReview = await addDoc(collection(db, "userReview"), {
@@ -189,34 +193,56 @@ export default function DetailComponent({
     getReviews();
   }, []);
 
-  // const getReviews = async (limitReviews, lastReviewDoc) => {
-  //   let q = query(
+  // Test  *********** 페이지네이션 적용 !
+  // const [testData, setTestData] = useState([]);
+  // const [key, setKey] = useState(false);
+  // const [noMore, setNomore] = useState(false);
+
+  // useEffect(() => {
+  //   const getFirstPage = async () => {
+  //     const queryRef = query(
+  //       collection(db, "userReview"),
+  //       orderBy("datenow", "desc"),
+  //       limit(4)
+  //     );
+  //     try {
+  //       const snap = await getDocs(queryRef);
+  //       const docsArray = snap.docs.map((doc) => ({
+  //         id: doc.id,
+  //         ...doc.data(),
+  //       }));
+  //       setTestData(docsArray);
+  //       setKey(snap.docs[snap.docs.length - 1]);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   getFirstPage();
+  // }, []);
+  // console.log(testData);
+
+  // const loadMore = async () => {
+  //   const queryRef = query(
   //     collection(db, "userReview"),
   //     orderBy("datenow", "desc"),
-  //     limit(limitReviews)
+  //     startAfter(key),
+  //     limit(2)
   //   );
-  //   if (lastReviewDoc) {
-  //     q = query(q, startAfter(lastReviewDoc));
-  //   }
-  //   const unsubscribe = onSnapshot(q, (querySnapshot) => {
-  //     const review = querySnapshot.docs.map((doc) => ({
+  //   try {
+  //     const snap = await getDocs(queryRef);
+  //     snap.empty === 0
+  //       ? setNomore(true)
+  //       : setKey(snap.docs[snap.docs.length - 1]);
+  //     const docsArray = snap.docs.map((doc) => ({
   //       id: doc.id,
   //       ...doc.data(),
   //     }));
-  //     setReviewList((prev) => [...prev, ...review]); // 이전 리뷰 리스트와 새로운 리뷰 리스트를 병합
-  //     setLastReview(querySnapshot.docs[querySnapshot.docs.length - 1]); // 마지막 리뷰 저장
-  //   });
-  //   return unsubscribe;
+  //     setTestData([...testData, ...docsArray]);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
   // };
-
-  // useEffect(() => {
-  //   getReviews(6, null);
-  // }, []);
-
-  // const handleLoadMore = () => {
-  //   getReviews(6, lastReview);
-  // };
-
+  // **********************
   return (
     <MainWrap>
       <div>
@@ -360,7 +386,7 @@ export default function DetailComponent({
           <h2>상품리뷰</h2>
           <div
             style={{
-              border: "1px solid blue",
+              border: "1px solid ",
               borderRadius: "5px",
               padding: "5px",
               width: "800px",
@@ -368,8 +394,10 @@ export default function DetailComponent({
               backgroundColor: "white",
               marginTop: "40px",
               overflowY: "scroll",
+              overflow: "auto",
             }}
           >
+            {/* 원래 testData 가 아니고 reviewList였음 밑에 reviewList={reviewList}였음 */}
             {reviewList.map((item, i) => {
               if (item.snackName === snack?.name) {
                 return (
@@ -412,6 +440,27 @@ export default function DetailComponent({
             등록
           </ReviewClickBtn>
         </div>
+        {/* -----------------------------------
+        페이지네이션
+        <div
+          style={{
+            width: "800px",
+            border: "1px solid",
+            height: "100px",
+            overflowY: "auto",
+          }}
+        >
+          {testData.map((item) => {
+            return (
+              <div key={item.id}>
+                <h4>{item.displayName}</h4>
+                <p>{item.content}</p>
+              </div>
+            );
+          })}
+          <button onClick={loadMore}>리뷰 더보기 ...</button>
+        </div>
+        ----------------------------------- */}
       </div>
     </MainWrap>
   );
