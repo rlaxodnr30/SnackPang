@@ -237,7 +237,7 @@ const ModalBox = styled.div`
   overflow: hidden;
   box-sizing: border-box;
   top: 37px;
-  left: 205px;
+  left: 320px;
   width: 500px;
   height: 390px;
   overflow: visible !important;

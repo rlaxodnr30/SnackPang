@@ -2,22 +2,17 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BsSearch } from "react-icons/bs";
 import {
-  MainWrap,
-  Carousel,
-  CarouselInner,
-  SnacksImg,
-  ProducImg,
   ProducImgBox,
-  SnackCard,
-  SnackName,
-  SnackPrice,
+  HomeImg,
+  SearchInput,
+  SearchInputBox,
+  StMoveTopButton,
 } from "./HomePage";
 import Swing from "../../images/swingChip.jpg";
 import snackMain from "../../images/snackMain.mp4";
 import styled from "styled-components";
 import { db } from "../../firebase";
 import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
-import DetailComponent from "../Detail/DetailComponent.jsx";
 import { ThemeContext } from "../../context/ThemeContext";
 import Loading from "../Loading/Loading";
 import ProductHome from "./ProductHome";
@@ -172,69 +167,3 @@ export default function Home({
     </div>
   );
 }
-
-export const HomeImg = styled.div`
-  background-size: cover;
-  width: 100%;
-  height: 500px;
-`;
-const StMoveTopButton = styled.div`
-  height: 60px;
-  width: 60px;
-  position: fixed;
-  bottom: 150px;
-  right: 100px;
-  z-index: 1;
-  border: none;
-  outline: none;
-  background: gray;
-  color: white;
-  cursor: pointer;
-  border-radius: 30px;
-  font-size: 18px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  &:hover {
-    color: black;
-  }
-  @media screen and (max-width: 800px) {
-    display: none;
-  }
-`;
-export const HomeTextBox = styled.div`
-  margin-left: 40px;
-  font-weight: bold;
-  width: 400px;
-  height: 100%;
-  padding-top: 50px;
-  text-align: center;
-  color: white;
-`;
-export const SearchInput = styled.input`
-  border: none;
-  width: 30%;
-  height: 30px;
-  border-radius: 15px;
-  font-size: 16px;
-  margin-left: 5px;
-  &::placeholder {
-    color: #93938c;
-  }
-  &:hover {
-    background-color: beige;
-  }
-
-  &:focus {
-    color: #363636;
-    border: 1px solid gray;
-    outline: none;
-  }
-`;
-export const SearchInputBox = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 40px;
-`;
