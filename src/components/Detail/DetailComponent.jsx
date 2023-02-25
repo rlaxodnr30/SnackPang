@@ -36,6 +36,7 @@ import styled from "styled-components";
 import DetailReview from "./DetailReview";
 import { async } from "@firebase/util";
 export default function DetailComponent({
+  userNick,
   homeSnackUrl,
   clickSnacks,
   setCartCount,
@@ -148,7 +149,7 @@ export default function DetailComponent({
     }
     setCartCount((prev) => prev + count);
   };
-
+  //리뷰작성
   const addReivew = async () => {
     //로그인 유저가 아니면 리뷰작성 x alert 창이 뜸
     if (!loginUser) {
@@ -402,6 +403,7 @@ export default function DetailComponent({
               if (item.snackName === snack?.name) {
                 return (
                   <DetailReview
+                    userNick={userNick}
                     key={item.id}
                     id={item.id}
                     reviewList={reviewList}

@@ -5,11 +5,20 @@ import { FiMoreVertical } from "react-icons/fi";
 import { db, auth } from "../../firebase";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import blankProfiles from "../../images/blankProfiles.png";
-export default function DetailReview({ item, i, reviewList, id, setTestData }) {
+export default function DetailReview({
+  item,
+  i,
+  reviewList,
+  id,
+  setTestData,
+  userNick,
+}) {
   const [editBox, setEditBox] = useState(false);
   const [editVal, setEditVal] = useState("");
   const [toggle, setToggle] = useState(false);
   const loginUser = auth.currentUser;
+  console.log("item", item.displayName);
+  console.log("user", userNick);
   //삭제버튼 함수
   const handledelete = async (id, i) => {
     await deleteDoc(doc(db, "userReview", id));
@@ -27,12 +36,10 @@ export default function DetailReview({ item, i, reviewList, id, setTestData }) {
       <div style={{ width: "150px" }}>
         <UserProfileImgBox>
           {/* <ProfileImg src={item?.userImage} /> */}
-          <ProfileImg
-            src={item.userImage ? auth.currentUser?.photoURL : blankProfiles}
-          />
+          <ProfileImg src={item.userImage ? item?.userImage : blankProfiles} />
         </UserProfileImgBox>
         <div>
-          <UserReviewName>{auth.currentUser?.displayName}</UserReviewName>
+          <UserReviewName>{item?.displayName}</UserReviewName>
         </div>
         <Date>{item?.datenow}</Date>
         <ProductName>{item.snackName}</ProductName>

@@ -96,11 +96,15 @@ export default function MypageComponent({
     const user = auth.currentUser;
     try {
       const userEmail = prompt("본인 이메일을 입력해주세요");
-      if (userEmail === user.email) await deleteUser(user);
-      alert("그동안 SnackPang을 이용해주셔서 감사했습니다!!");
-      navigate("/signin");
+      if (userEmail === user.email) {
+        await deleteUser(user);
+        alert("그동안 SnackPang을 이용해주셔서 감사했습니다!!");
+        navigate("/signin");
+      } else {
+        alert("이메일이 맞지 않습니다!");
+      }
     } catch {
-      console.log("이메일이 맞지 않습니다!");
+      alert("잘못된 접근입니다!");
     }
   };
   return (
