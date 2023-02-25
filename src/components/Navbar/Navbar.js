@@ -6,7 +6,7 @@ export const NavbarBox = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 20px;
-  background-color: gray;
+  background-color: #dfdfdf;
   color: white;
 `;
 export const LeftNav = styled.div`
@@ -15,7 +15,7 @@ export const LeftNav = styled.div`
 `;
 export const HomeLogo = styled.img`
   width: 100px;
-  height: 80px;
+  height: 50px;
 `;
 export const LeftNavLink = styled(NavLink)`
   display: flex;
@@ -25,6 +25,7 @@ export const LeftNavLink = styled(NavLink)`
 `;
 
 export const RightNav = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
 `;
@@ -37,14 +38,18 @@ export const CartImg = styled.img`
 `;
 export const LogBtn = styled.button`
   border: none;
-  background-color: gray;
-  margin-right: 10px;
-  font-weight: bold;
-  cursor: pointer;
+  background-color: #dfdfdf;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: black;
+  font-weight: 600;
+  padding-top: 3px;
+  font-size: 15px;
 `;
 export const Porduc = styled.span`
   border: none;
-  background-color: gray;
+  background-color: #dfdfdf;
   margin-right: 10px;
   font-weight: 500;
   color: black;
@@ -54,5 +59,32 @@ export const RightNavLink = styled(NavLink)`
   display: flex;
   align-items: center;
   text-decoration: none;
+  color: black;
+  font-weight: 500;
+`;
+export const LogiBtn = styled.button`
+  border: none;
+  background-color: #dfdfdf;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: black;
+  font-weight: 600;
+  padding-top: 3px;
+  font-size: 15px;
+  cursor: pointer;
+`;
+export const CartCount = styled.div`
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  background-color: red;
   color: white;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: -8px;
+  left: 21px;
 `;

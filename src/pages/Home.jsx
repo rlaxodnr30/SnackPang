@@ -1,16 +1,20 @@
 import React from "react";
 import styled from "styled-components";
-
-export default function Home() {
+import HomePage from "../components/HomePage/HomePage.jsx";
+export default function Home({
+  setClickSnacks,
+  clickSnacks,
+  loading,
+  setLoading,
+  setCartCount,
+}) {
   return (
-    <>
-      <ProductImgBox></ProductImgBox>
-    </>
+    <HomePage
+      setCartCount={setCartCount}
+      setClickSnacks={setClickSnacks}
+      clickSnacks={clickSnacks}
+      loading={loading}
+      setLoading={setLoading}
+    />
   );
 }
-
-export const ProductImgBox = styled.div`
-  width: 100%;
-  height: 300px;
-  background-color: blueviolet;
-`;
