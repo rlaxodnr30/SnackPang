@@ -64,7 +64,11 @@ export default function Router() {
         <Route
           path="/detail/:id"
           element={
-            <DetailPage clickSnacks={clickSnacks} setCartCount={setCartCount} />
+            <DetailPage
+              userNick={userNick}
+              clickSnacks={clickSnacks}
+              setCartCount={setCartCount}
+            />
           }
         />
         <Route path="/admin" element={<AdminComponent />} />
