@@ -10,7 +10,7 @@ import {
   ProfileName,
   ProfileNameBtn,
 } from "./MypageComponent";
-import { auth, storage } from "../../firebase";
+import { auth, db, storage } from "../../firebase";
 import {
   deleteUser,
   onAuthStateChanged,
@@ -21,6 +21,13 @@ import { useNavigate } from "react-router-dom";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { ThemeContext } from "../../context/ThemeContext";
 import { useSelector } from "react-redux";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  query,
+  updateDoc,
+} from "firebase/firestore";
 
 export default function MypageComponent({
   setUserImage,
@@ -31,6 +38,7 @@ export default function MypageComponent({
   const { isDark } = useContext(ThemeContext);
   // console.log(isDark);
   const [imgFile, setImgFile] = useState("");
+  const [userDocId, setUserDocId] = useState("");
   const imgRef = useRef();
   const navigate = useNavigate();
   const nickNameRef = useRef("");
@@ -39,7 +47,7 @@ export default function MypageComponent({
   const loginUser = auth.currentUser;
 
   const today = useSelector((state) => state.time);
-  console.log("config", today);
+  console.log("config", auth.currentUser);
 
   // console.log(userNick);
   // console.log("loginuser :", loginUser);
@@ -66,11 +74,33 @@ export default function MypageComponent({
     updateProfile(auth.currentUser, {
       photoURL: imgUrl,
     });
+    await updateDoc(doc(db, "users", userDocId), {
+      userImage: imgUrl,
+    });
     setUserImage(imgUrl);
     // imgUrl.current = { url: imgUrl };
   };
+  useEffect(() => {
+    const q = query(collection(db, "users"));
+    console.log("Q: ", q);
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const userList = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      const current = userList.find(
+        (item) => item.userUid === auth.currentUser.uid
+      );
+      console.log("current:", current);
+      setUserDocId(current.id);
+    });
+    // console.log("list: ", userList)
+    // const ref = doc(db, "users", "userUid");
+    // console.log("ref", ref);
+  }, []);
 
-  const profileChangeBtn = async () => {
+  const profileChangeBtn = async (e) => {
+    console.log(e);
     await updateProfile(auth.currentUser, {
       displayName: nickNameRef.current.value,
     });
@@ -78,6 +108,10 @@ export default function MypageComponent({
     // setUserNick(nickNameRef.current.value); // 닉네임 스테이트로 관리함  추가
     alert("닉네임이 변경되었습니다!");
     setUserNick(auth.currentUser.displayName); //state관리를 추가하니깐 갑자기 된다?
+    // await updateProfile(doc(db, "users"));
+    await updateDoc(doc(db, "users", userDocId), {
+      userDisplayName: nickNameRef.current.value,
+    });
   };
   // console.log("asd", userNick);
   // console.log("dd :", auth.currentUser);
