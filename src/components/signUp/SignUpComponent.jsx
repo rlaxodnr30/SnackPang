@@ -18,7 +18,7 @@ import {
   CheckLabel,
   CheckLabelAll,
 } from "./SignUpComponent";
-import { auth } from "../../firebase.js";
+import { auth, db } from "../../firebase.js";
 
 import {
   createUserWithEmailAndPassword,
@@ -29,6 +29,7 @@ import { useNavigate } from "react-router-dom";
 import Loading from "../Loading/Loading";
 import MarketingModal from "./MarketingModal";
 import UseModal from "./UseModal";
+import { addDoc, collection } from "firebase/firestore";
 
 export default function SignUpComponent() {
   const [loading, setLoading] = useState(false);
@@ -93,7 +94,7 @@ export default function SignUpComponent() {
 
   //회원가입
   const signUpBtn = async () => {
-    // setLoading(true);
+    setLoading(true);
     /* 이메일 정규표현식 */
     const emailReg = new RegExp(
       "^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$"
@@ -126,21 +127,26 @@ export default function SignUpComponent() {
       return;
     }
 
-    alert("회원가입이 완료 되었습니다!!");
-
     const user = await createUserWithEmailAndPassword(
       auth,
       idRef.current.value,
       pwRef.current.value
       // (auth.displayName = nameRef.current.value)
-    ).then(() => {
-      if (auth.currentUser)
-        updateProfile(auth?.currentUser, {
-          displayName: inputname,
-          // photoURL: profileUrl,
-        });
-      // console.log(auth);
-    });
+    )
+      .then(() => {
+        if (auth.currentUser)
+          updateProfile(auth?.currentUser, {
+            displayName: inputname,
+            // photoURL: profileUrl,
+          });
+        alert("회원가입이 완료 되었습니다!!");
+        // console.log(auth);
+      })
+      .catch((err) => {
+        setLoading(false);
+        alert("형식에 맞춰서 작성해주세요!");
+        console.log(err);
+      });
     const userLogin = await signInWithEmailAndPassword(
       auth,
       idRef.current.value,
@@ -149,6 +155,12 @@ export default function SignUpComponent() {
     );
     setLoading(false);
     navigate("/");
+    const docRef = await addDoc(collection(db, "users"), {
+      userUid: auth.currentUser.uid,
+      userDisplayName: auth.currentUser.displayName,
+      useremail: auth.currentUser.email,
+      userImage: "",
+    });
   };
 
   // 현재 이메일 확인 문자

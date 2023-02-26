@@ -150,6 +150,7 @@ export default function DetailComponent({
     setCartCount((prev) => prev + count);
   };
   //리뷰작성
+  console.log("snack", snack);
   const addReivew = async () => {
     //로그인 유저가 아니면 리뷰작성 x alert 창이 뜸
     if (!loginUser) {
@@ -171,9 +172,9 @@ export default function DetailComponent({
       // datenow: `${new window.Date().getFullYear()}-${
       //   new window.Date().getMonth() + 1
       // }-${new window.Date().getDate()} ${timeStr} `,
-      displayName: loginUser?.displayName,
-      snackName: clickSnacks?.name,
-      imageUrl: clickSnacks?.image,
+      displayName: loginUser?.displayName, // 유저 닉네임
+      snackName: snack?.name,
+      imageUrl: snack?.image,
       userImg: loginUser?.photoURL,
     });
     alert("소중한 리뷰 감사합니다!");
@@ -400,9 +401,11 @@ export default function DetailComponent({
           >
             {/* 원래 testData 가 아니고 reviewList였음 밑에 reviewList={reviewList}였음 */}
             {reviewList.map((item, i) => {
+              console.log("reviewItem", item);
               if (item.snackName === snack?.name) {
                 return (
                   <DetailReview
+                    userId={item.userId}
                     userNick={userNick}
                     key={item.id}
                     id={item.id}
