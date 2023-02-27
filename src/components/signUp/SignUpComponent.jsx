@@ -155,6 +155,7 @@ export default function SignUpComponent() {
     );
     setLoading(false);
     navigate("/");
+    console.log(auth.currentUser);
     const docRef = await addDoc(collection(db, "users"), {
       userUid: auth.currentUser.uid,
       userDisplayName: auth.currentUser.displayName,
