@@ -67,7 +67,7 @@ export default function DetailReview({
       <div style={{ width: "150px" }}>
         <UserProfileImgBox>
           {/* <ProfileImg src={item?.userImage} /> */}
-          <ProfileImg src={item.userImage ? nowUserImg : blankProfiles} />
+          <ProfileImg src={nowUserImg ? nowUserImg : blankProfiles} />
         </UserProfileImgBox>
         <div>
           <UserReviewName>{nowUserName}</UserReviewName>
@@ -93,7 +93,6 @@ export default function DetailReview({
         ) : (
           <Content>{item.content}</Content>
         )}
-        {/* <Content>{item.content}</Content> */}
       </ContentBox>
       {toggle === true && loginUser?.uid === item.userId ? (
         <DeleteModifybtn
@@ -122,12 +121,12 @@ export default function DetailReview({
             onClick={() => {
               return setToggle(!toggle);
             }}
-            style={{ cursor: "pointer" }}
+            // style={{ cursor: loginUser?.uid === item.userId ? "pointer" : "" }}
           />
         </>
       ) : (
         <FiMoreVertical
-          style={{ cursor: "pointer" }}
+          style={{ cursor: loginUser?.uid === item.userId ? "pointer" : "" }}
           onClick={() => {
             setToggle(!toggle);
           }}

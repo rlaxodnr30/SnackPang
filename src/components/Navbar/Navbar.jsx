@@ -92,16 +92,13 @@ export default function Navbar({
         setIsLogin(false);
       }
       setUsers(user);
-      // console.log(user);
-      // console.log(users);
       if (user) {
         setUserImage(auth.currentUser.photoURL);
-        // setUsers(userNick);
       }
     });
   }, []);
 
-  // console.log(userImg);
+  console.log("users3", users);
   // console.log("user :", auth.currentUser);
   return (
     <>
@@ -140,7 +137,7 @@ export default function Navbar({
 
           {isLogin ? (
             // <LogBtn>{users.displayName}</LogBtn>
-            <LogBtn>{users.displayName}</LogBtn>
+            <LogBtn>{auth.currentUser.displayName}</LogBtn>
           ) : (
             <RightNavLink to="/signup">회원가입</RightNavLink>
           )}

@@ -98,7 +98,7 @@ export default function MypageComponent({
     // const ref = doc(db, "users", "userUid");
     // console.log("ref", ref);
   }, []);
-
+  console.log(auth.currentUser);
   const profileChangeBtn = async (e) => {
     console.log(e);
     await updateProfile(auth.currentUser, {
