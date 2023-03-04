@@ -3,13 +3,31 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { FiMoreVertical } from "react-icons/fi";
 import { db, auth } from "../../firebase";
-import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
 import blankProfiles from "../../images/blankProfiles.png";
-export default function DetailReview({ item, i, reviewList, id, setTestData }) {
+export default function DetailReview({
+  item,
+  i,
+  reviewList,
+  id,
+  setTestData,
+  userNick,
+  userId,
+}) {
   const [editBox, setEditBox] = useState(false);
   const [editVal, setEditVal] = useState("");
   const [toggle, setToggle] = useState(false);
+  const [nowUserName, setNowUserName] = useState("");
+  const [nowUserImg, setNowUserImg] = useState("");
   const loginUser = auth.currentUser;
+  console.log("item", item.displayName);
+  console.log("user", userNick);
   //삭제버튼 함수
   const handledelete = async (id, i) => {
     await deleteDoc(doc(db, "userReview", id));
@@ -22,17 +40,37 @@ export default function DetailReview({ item, i, reviewList, id, setTestData }) {
     });
   };
 
+  // userId는 변하는 값이 아님
+  // 리뷰 한개당 특정 유저의 uid가 있음
+
+  const testName = async () => {
+    const querySnapshot = await getDocs(collection(db, "users"));
+    // console.log("query", querySnapshot);
+    let userArray = [];
+    const test = querySnapshot.forEach((item) => {
+      // console.log(item.data());
+      userArray.push(item.data());
+    });
+    console.log(userArray);
+    const nowUser = userArray.find((item) => item.userUid === userId);
+    console.log("nowUser: ", nowUser);
+    setNowUserName(nowUser?.userDisplayName);
+    setNowUserImg(nowUser?.userImage);
+  };
+  console.log("asd", nowUserImg);
+  useEffect(() => {
+    testName();
+  }, []);
+
   return (
     <ReviewBigBox>
       <div style={{ width: "150px" }}>
         <UserProfileImgBox>
           {/* <ProfileImg src={item?.userImage} /> */}
-          <ProfileImg
-            src={item.userImage ? auth.currentUser?.photoURL : blankProfiles}
-          />
+          <ProfileImg src={nowUserImg ? nowUserImg : blankProfiles} />
         </UserProfileImgBox>
         <div>
-          <UserReviewName>{auth.currentUser?.displayName}</UserReviewName>
+          <UserReviewName>{nowUserName}</UserReviewName>
         </div>
         <Date>{item?.datenow}</Date>
         <ProductName>{item.snackName}</ProductName>
@@ -55,7 +93,6 @@ export default function DetailReview({ item, i, reviewList, id, setTestData }) {
         ) : (
           <Content>{item.content}</Content>
         )}
-        {/* <Content>{item.content}</Content> */}
       </ContentBox>
       {toggle === true && loginUser?.uid === item.userId ? (
         <DeleteModifybtn
@@ -84,12 +121,12 @@ export default function DetailReview({ item, i, reviewList, id, setTestData }) {
             onClick={() => {
               return setToggle(!toggle);
             }}
-            style={{ cursor: "pointer" }}
+            // style={{ cursor: loginUser?.uid === item.userId ? "pointer" : "" }}
           />
         </>
       ) : (
         <FiMoreVertical
-          style={{ cursor: "pointer" }}
+          style={{ cursor: loginUser?.uid === item.userId ? "pointer" : "" }}
           onClick={() => {
             setToggle(!toggle);
           }}
